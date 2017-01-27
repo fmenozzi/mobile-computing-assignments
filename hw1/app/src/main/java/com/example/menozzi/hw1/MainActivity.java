@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mMoveCountTextView;
     TextView mSequenceTextView;
 
+    int mMoveCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TextView view = (TextView) v;
-                        Toast.makeText(v.getContext(), "Pressed " + view.getText(), Toast.LENGTH_SHORT).show();
+                        updateMoveCount(++mMoveCount);
                     }
                 });
 
@@ -167,10 +168,16 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_restart) {
-            Toast.makeText(this, "Restart", Toast.LENGTH_SHORT).show();
+            mMoveCount = 0;
+            updateMoveCount(mMoveCount);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateMoveCount(int newCount) {
+        String moveCountText = getResources().getString(R.string.move_count_text);
+        mMoveCountTextView.setText(moveCountText + " " + newCount);
     }
 
     public int dipToPixels(Context context, int dip) {
