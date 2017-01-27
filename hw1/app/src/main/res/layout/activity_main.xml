@@ -54,6 +54,15 @@
 
     <TableLayout
         android:id="@+id/grid_table"
+        android:paddingBottom="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/switch_table"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

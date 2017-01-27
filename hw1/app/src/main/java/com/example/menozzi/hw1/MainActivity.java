@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,15 +23,16 @@ public class MainActivity extends AppCompatActivity {
         WHITE,
     }
 
-    TargetState targetState = TargetState.BLACK;
+    TargetState mTargetState = TargetState.BLACK;
 
     Button mBlackButton;
     Button mWhiteButton;
 
-    int primaryColor;
-    int secondaryColor;
+    int mPrimaryColor;
+    int mSecondaryColor;
 
     TableLayout mGridTable;
+    TableLayout mSwitchTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         mBlackButton = (Button) findViewById(R.id.target_state_black_button);
         mWhiteButton = (Button) findViewById(R.id.target_state_white_button);
 
-        primaryColor   = ContextCompat.getColor(this, R.color.colorPrimaryDark);
-        secondaryColor = ContextCompat.getColor(this, R.color.colorSecondary);
+        mPrimaryColor = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+        mSecondaryColor = ContextCompat.getColor(this, R.color.colorSecondary);
 
         mGridTable = (TableLayout) findViewById(R.id.grid_table);
         for (int r = 0; r < GRID_SIZE; r++) {
@@ -61,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView cell = new TextView(this);
                 cell.setLayoutParams(new TableRow.LayoutParams(c+1));
-                cell.setBackgroundColor(darkSquare ? primaryColor : secondaryColor);
-                cell.setTextColor(darkSquare ? secondaryColor : primaryColor);
+                cell.setBackgroundColor(darkSquare ? mPrimaryColor : mSecondaryColor);
+                cell.setTextColor(darkSquare ? mSecondaryColor : mPrimaryColor);
                 cell.setGravity(Gravity.CENTER);
                 cell.setText(String.valueOf(r*GRID_SIZE + c));
                 cell.setTextSize(40);
@@ -75,26 +77,65 @@ public class MainActivity extends AppCompatActivity {
 
             mGridTable.addView(row);
         }
+
+        mSwitchTable = (TableLayout) findViewById(R.id.switch_table);
+        for (int r = 0; r < 2; r++) {
+            TableRow row = new TableRow(this);
+            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                                                          TableRow.LayoutParams.WRAP_CONTENT));
+            for (int c = 0; c < 5; c++) {
+                int ascii = 65 + (r*5 + c);
+
+                int paddingTopBottom = dipToPixels(this, 4);
+                int paddingLeftRight = dipToPixels(this, 16);
+
+                int margin = dipToPixels(this, 4);
+
+                TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                                                                         TableRow.LayoutParams.WRAP_CONTENT);
+                params.setMargins(margin, margin, margin, margin);
+
+                TextView button = new TextView(this);
+                button.setLayoutParams(params);
+                button.setBackgroundColor(mPrimaryColor);
+                button.setTextColor(mSecondaryColor);
+                button.setGravity(Gravity.CENTER);
+                button.setText(Character.toString((char) ascii));
+                button.setTextSize(32);
+                button.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView view = (TextView) v;
+                        Toast.makeText(v.getContext(), "Pressed " + view.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                row.addView(button);
+            }
+
+            mSwitchTable.addView(row);
+        }
     }
 
     public void onBlackClick(View view) {
-        mBlackButton.setBackgroundColor(primaryColor);
-        mBlackButton.setTextColor(secondaryColor);
+        mBlackButton.setBackgroundColor(mPrimaryColor);
+        mBlackButton.setTextColor(mSecondaryColor);
 
-        mWhiteButton.setBackgroundColor(secondaryColor);
-        mWhiteButton.setTextColor(primaryColor);
+        mWhiteButton.setBackgroundColor(mSecondaryColor);
+        mWhiteButton.setTextColor(mPrimaryColor);
 
-        targetState = TargetState.BLACK;
+        mTargetState = TargetState.BLACK;
     }
 
     public void onWhiteClick(View view) {
-        mWhiteButton.setBackgroundColor(primaryColor);
-        mWhiteButton.setTextColor(secondaryColor);
+        mWhiteButton.setBackgroundColor(mPrimaryColor);
+        mWhiteButton.setTextColor(mSecondaryColor);
 
-        mBlackButton.setBackgroundColor(secondaryColor);
-        mBlackButton.setTextColor(primaryColor);
+        mBlackButton.setBackgroundColor(mSecondaryColor);
+        mBlackButton.setTextColor(mPrimaryColor);
 
-        targetState = TargetState.WHITE;
+        mTargetState = TargetState.WHITE;
     }
 
     public int dipToPixels(Context context, int dip) {
