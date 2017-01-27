@@ -3,4 +3,7 @@
 
     <string name="target_state_black_button_text">Black</string>
     <string name="target_state_white_button_text">White</string>
+
+    <string name="move_count_text">Move Count: </string>
+    <string name="sequence_text">Sequence: </string>
 </resources>

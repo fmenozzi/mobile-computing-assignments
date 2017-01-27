@@ -31,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
     int mPrimaryColor;
     int mSecondaryColor;
 
-    TableLayout mGridTable;
-    TableLayout mSwitchTable;
+    TableLayout mGridTableLayout;
+    TableLayout mSwitchTableLayout;
+
+    TextView mMoveCountTextView;
+    TextView mSequenceTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,15 @@ public class MainActivity extends AppCompatActivity {
         setupGridTable();
 
         setupSwitchTable();
+
+        mMoveCountTextView = (TextView) findViewById(R.id.move_count_textview);
+        mMoveCountTextView.append(" 0");
+
+        mSequenceTextView = (TextView) findViewById(R.id.sequence_textview);
     }
 
     public void setupGridTable() {
-        mGridTable = (TableLayout) findViewById(R.id.grid_table);
+        mGridTableLayout = (TableLayout) findViewById(R.id.grid_table);
         for (int r = 0; r < GRID_SIZE; r++) {
             TableRow row = new TableRow(this);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
@@ -81,12 +89,12 @@ public class MainActivity extends AppCompatActivity {
                 row.addView(cell);
             }
 
-            mGridTable.addView(row);
+            mGridTableLayout.addView(row);
         }
     }
 
     public void setupSwitchTable() {
-        mSwitchTable = (TableLayout) findViewById(R.id.switch_table);
+        mSwitchTableLayout = (TableLayout) findViewById(R.id.switch_table);
         for (int r = 0; r < 2; r++) {
             TableRow row = new TableRow(this);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
@@ -122,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 row.addView(button);
             }
 
-            mSwitchTable.addView(row);
+            mSwitchTableLayout.addView(row);
         }
     }
 
