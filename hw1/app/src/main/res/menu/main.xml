@@ -5,6 +5,7 @@
     <item
         android:id="@+id/action_restart"
         android:title="@string/restart_menu_text"
+        android:icon="@drawable/ic_restore_white_24dp_xxxhdpi"
         android:orderInCategory="1"
         app:showAsAction="ifRoom"
         />
