@@ -45,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
         mPrimaryColor = ContextCompat.getColor(this, R.color.colorPrimaryDark);
         mSecondaryColor = ContextCompat.getColor(this, R.color.colorSecondary);
 
+        setupGridTable();
+
+        setupSwitchTable();
+    }
+
+    public void setupGridTable() {
         mGridTable = (TableLayout) findViewById(R.id.grid_table);
         for (int r = 0; r < GRID_SIZE; r++) {
             TableRow row = new TableRow(this);
@@ -77,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
             mGridTable.addView(row);
         }
+    }
 
+    public void setupSwitchTable() {
         mSwitchTable = (TableLayout) findViewById(R.id.switch_table);
         for (int r = 0; r < 2; r++) {
             TableRow row = new TableRow(this);
