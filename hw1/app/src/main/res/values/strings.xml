@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">hw1</string>
+    <string name="app_name">Programming Assignment 1</string>
 
     <string name="target_state_black_button_text">Black</string>
     <string name="target_state_white_button_text">White</string>
