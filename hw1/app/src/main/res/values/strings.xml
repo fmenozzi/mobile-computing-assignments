@@ -6,4 +6,5 @@
 
     <string name="move_count_text">Move Count: </string>
     <string name="sequence_text">Sequence: </string>
+    <string name="restart_menu_text">Restart</string>
 </resources>
