@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final int GRID_SIZE = 4;
-
     enum TargetState {
         BLACK,
         WHITE,
@@ -64,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void setupGridTable() {
         mGridTableLayout = (TableLayout) findViewById(R.id.grid_table);
-        for (int r = 0; r < GRID_SIZE; r++) {
+        for (int r = 0; r < Grid.GRID_SIZE; r++) {
             TableRow row = new TableRow(this);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                                                           TableRow.LayoutParams.WRAP_CONTENT));
-            for (int c = 0; c < GRID_SIZE; c++) {
+            for (int c = 0; c < Grid.GRID_SIZE; c++) {
                 boolean rowEven = r % 2 == 0;
                 boolean colEven = c % 2 == 0;
 
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 cell.setBackgroundColor(darkSquare ? mPrimaryColor : mSecondaryColor);
                 cell.setTextColor(darkSquare ? mSecondaryColor : mPrimaryColor);
                 cell.setGravity(Gravity.CENTER);
-                cell.setText(String.valueOf(r*GRID_SIZE + c));
+                cell.setText(String.valueOf(r*Grid.GRID_SIZE+ c));
                 cell.setTextSize(40);
                 cell.setPadding(padding, padding, padding, padding);
                 cell.setWidth(w);
