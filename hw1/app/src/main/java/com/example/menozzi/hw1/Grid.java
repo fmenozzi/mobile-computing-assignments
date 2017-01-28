@@ -26,7 +26,7 @@ public class Grid {
     private Cell[][] grid = new Cell[GRID_SIZE][GRID_SIZE];
 
     public Grid() {
-        regenerate();
+        reset();
     }
 
     public Cell getCell(int r, int c) {
@@ -37,7 +37,7 @@ public class Grid {
         grid[r][c] = cell;
     }
 
-    public void regenerate() {
+    public void reset() {
         Random rng = new Random();
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {

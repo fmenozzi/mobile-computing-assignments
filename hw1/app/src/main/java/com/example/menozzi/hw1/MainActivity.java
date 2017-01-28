@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_restart:
                 updateMoveCount(0);
-                mGrid.regenerate();
+                resetGrid();
                 updateGridTable();
                 break;
             case R.id.action_auto:
@@ -205,6 +205,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void resetGrid() {
+        mGrid.reset();
     }
 
     public void updateMoveCount(int newCount) {
@@ -232,9 +236,7 @@ public class MainActivity extends AppCompatActivity {
             int r = i % Grid.GRID_SIZE;
             int c = i / Grid.GRID_SIZE;
 
-            boolean isBlack = mGrid.getCell(r, c).isBlack();
-
-            mGrid.getCell(r, c).color = isBlack ? CellColor.WHITE : CellColor.BLACK;
+            mGrid.toggleCellColor(r, c);
         }
 
         updateGridTable();
@@ -242,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkForWin() {
         boolean won = true;
+
         for (int r = 0; r < Grid.GRID_SIZE; r++) {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
                 boolean cellIsBlack = mGrid.getCell(r, c).isBlack();
@@ -251,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
         if (won) {
             Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
         }
