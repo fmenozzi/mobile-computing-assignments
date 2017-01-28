@@ -167,9 +167,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_restart) {
-            mMoveCount = 0;
-            updateMoveCount(mMoveCount);
+        switch (id) {
+            case R.id.action_restart:
+                mMoveCount = 0;
+                updateMoveCount(mMoveCount);
+                break;
+            case R.id.action_auto:
+                Toast.makeText(this, "Auto", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(this, "How did we even get here?", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);

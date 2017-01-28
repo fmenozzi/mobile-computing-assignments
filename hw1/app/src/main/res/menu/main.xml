@@ -5,9 +5,15 @@
     <item
         android:id="@+id/action_restart"
         android:title="@string/restart_menu_text"
-        android:icon="@drawable/ic_restore_white_24dp_xxxhdpi"
+        android:icon="@drawable/ic_replay_white_24dp"
         android:orderInCategory="1"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_auto"
+        android:title="@string/auto_menu_text"
+        android:icon="@drawable/ic_play_arrow_white_24dp"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
 
 </menu>
