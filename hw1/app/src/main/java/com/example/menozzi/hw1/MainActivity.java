@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 updateGridTable();
                 break;
             case R.id.action_auto:
-                Toast.makeText(this, "Auto", Toast.LENGTH_SHORT).show();
+                autoSolve();
                 break;
             default:
                 Toast.makeText(this, "How did we even get here?", Toast.LENGTH_SHORT).show();
@@ -258,6 +258,10 @@ public class MainActivity extends AppCompatActivity {
         if (won) {
             Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void autoSolve() {
+        Toast.makeText(this, "Auto", Toast.LENGTH_SHORT).show();
     }
 
     public int dipToPixels(Context context, int dip) {
