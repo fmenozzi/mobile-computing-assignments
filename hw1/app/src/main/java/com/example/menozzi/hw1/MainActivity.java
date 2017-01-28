@@ -1,6 +1,7 @@
 package com.example.menozzi.hw1;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     Grid mGrid = new Grid();
 
-    Map<String, Integer[]> mSwitchMap = new HashMap<>();
+    static final Map<String, Integer[]> SWITCH_MAP = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +67,16 @@ public class MainActivity extends AppCompatActivity {
 
         mSequenceTextView = (TextView) findViewById(R.id.sequence_textview);
 
-        mSwitchMap.put("A", new Integer[]{0,1,2});
-        mSwitchMap.put("B", new Integer[]{3,7,9,11});
-        mSwitchMap.put("C", new Integer[]{4,10,14,15});
-        mSwitchMap.put("D", new Integer[]{0,4,5,6,7});
-        mSwitchMap.put("E", new Integer[]{6,7,8,10,12});
-        mSwitchMap.put("F", new Integer[]{0,2,14,15});
-        mSwitchMap.put("G", new Integer[]{3,14,15});
-        mSwitchMap.put("H", new Integer[]{4,5,7,14,15});
-        mSwitchMap.put("I", new Integer[]{1,2,3,4,5});
-        mSwitchMap.put("J", new Integer[]{3,4,5,9,13});
+        SWITCH_MAP.put("A", new Integer[]{0,1,2});
+        SWITCH_MAP.put("B", new Integer[]{3,7,9,11});
+        SWITCH_MAP.put("C", new Integer[]{4,10,14,15});
+        SWITCH_MAP.put("D", new Integer[]{0,4,5,6,7});
+        SWITCH_MAP.put("E", new Integer[]{6,7,8,10,12});
+        SWITCH_MAP.put("F", new Integer[]{0,2,14,15});
+        SWITCH_MAP.put("G", new Integer[]{3,14,15});
+        SWITCH_MAP.put("H", new Integer[]{4,5,7,14,15});
+        SWITCH_MAP.put("I", new Integer[]{1,2,3,4,5});
+        SWITCH_MAP.put("J", new Integer[]{3,4,5,9,13});
     }
 
     public void setupGridTable() {
@@ -194,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_restart:
                 updateMoveCount(0);
+                updateSequence("");
                 resetGrid();
                 updateGridTable();
                 break;
@@ -217,6 +219,11 @@ public class MainActivity extends AppCompatActivity {
         mMoveCountTextView.setText(moveCountText + " " + newCount);
     }
 
+    public void updateSequence(String sequence) {
+        String sequenceText = getResources().getString(R.string.sequence_text);
+        mSequenceTextView.setText(sequenceText + " " + sequence);
+    }
+
     public void updateGridTable() {
         for (int r = 0; r < Grid.GRID_SIZE; r++) {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
@@ -232,9 +239,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleCells(String key) {
-        for (Integer i : mSwitchMap.get(key)) {
-            int r = i % Grid.GRID_SIZE;
-            int c = i / Grid.GRID_SIZE;
+        for (Integer i : SWITCH_MAP.get(key)) {
+            int r = i / Grid.GRID_SIZE;
+            int c = i % Grid.GRID_SIZE;
 
             mGrid.toggleCellColor(r, c);
         }
@@ -261,10 +268,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void autoSolve() {
-        Toast.makeText(this, "Auto", Toast.LENGTH_SHORT).show();
+        String sequence = AutoSolver.solve(mGrid, mTargetState);
+        if (sequence != null) {
+            updateSequence(sequence);
+        } else {
+            Toast.makeText(this, "No solution", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public int dipToPixels(Context context, int dip) {
+    public int dipToPixels(@NonNull Context context, int dip) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, metrics);
     }

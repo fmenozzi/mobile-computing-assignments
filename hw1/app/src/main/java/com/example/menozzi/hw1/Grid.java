@@ -1,5 +1,7 @@
 package com.example.menozzi.hw1;
 
+import android.support.annotation.NonNull;
+
 import java.util.Random;
 
 public class Grid {
@@ -33,7 +35,7 @@ public class Grid {
         return grid[r][c];
     }
 
-    public void setCell(int r, int c, Cell cell) {
+    public void setCell(int r, int c, @NonNull Cell cell) {
         grid[r][c] = cell;
     }
 
@@ -51,6 +53,7 @@ public class Grid {
         cell.color = cell.isBlack() ? MainActivity.CellColor.WHITE : MainActivity.CellColor.BLACK;
     }
 
+    @NonNull
     public Grid copy() {
         Grid clone = new Grid();
         for (int r = 0; r < GRID_SIZE; r++) {
@@ -59,5 +62,16 @@ public class Grid {
             }
         }
         return clone;
+    }
+
+    public boolean allCellColorsAre(MainActivity.CellColor targetState) {
+        for (int r = 0; r < GRID_SIZE; r++) {
+            for (int c = 0; c < GRID_SIZE; c++) {
+                if (targetState != grid[r][c].color) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
