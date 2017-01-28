@@ -7,13 +7,17 @@ public class Grid {
         public int row;
         public int col;
 
-        public boolean isBlack;
+        public MainActivity.CellColor color;
 
         public Cell(int row, int col, boolean isBlack) {
             this.row = row;
             this.col = col;
 
-            this.isBlack = isBlack;
+            this.color = isBlack ? MainActivity.CellColor.BLACK : MainActivity.CellColor.WHITE;
+        }
+
+        public boolean isBlack() {
+            return this.color == MainActivity.CellColor.BLACK;
         }
     }
 
@@ -22,12 +26,7 @@ public class Grid {
     private Cell[][] grid = new Cell[GRID_SIZE][GRID_SIZE];
 
     public Grid() {
-        Random rng = new Random();
-        for (int r = 0; r < GRID_SIZE; r++) {
-            for (int c = 0; c < GRID_SIZE; c++) {
-                grid[r][c] = new Cell(r, c, rng.nextBoolean());
-            }
-        }
+        regenerate();
     }
 
     public Cell getCell(int r, int c) {
@@ -38,15 +37,25 @@ public class Grid {
         grid[r][c] = cell;
     }
 
+    public void regenerate() {
+        Random rng = new Random();
+        for (int r = 0; r < GRID_SIZE; r++) {
+            for (int c = 0; c < GRID_SIZE; c++) {
+                grid[r][c] = new Cell(r, c, rng.nextBoolean());
+            }
+        }
+    }
+
     public void toggleCellColor(int r, int c) {
-        grid[r][c].isBlack = !grid[r][c].isBlack;
+        Cell cell = grid[r][c];
+        cell.color = cell.isBlack() ? MainActivity.CellColor.WHITE : MainActivity.CellColor.BLACK;
     }
 
     public Grid copy() {
         Grid clone = new Grid();
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {
-                clone.setCell(r, c, new Cell(r, c, getCell(r, c).isBlack));
+                clone.setCell(r, c, new Cell(r, c, getCell(r, c).isBlack()));
             }
         }
         return clone;

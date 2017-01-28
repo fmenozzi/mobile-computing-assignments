@@ -21,12 +21,12 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    enum TargetState {
+    public enum CellColor {
         BLACK,
         WHITE,
     }
 
-    TargetState mTargetState = TargetState.BLACK;
+    CellColor mTargetState = CellColor.BLACK;
 
     Button mBlackButton;
     Button mWhiteButton;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
                 int k = r*Grid.GRID_SIZE + c;
 
-                boolean darkSquare = mGrid.getCell(r, c).isBlack;
+                boolean darkSquare = mGrid.getCell(r, c).isBlack();
 
                 int padding = dipToPixels(this, 4);
 
@@ -144,24 +144,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         updateMoveCount(mMoveCount+1);
 
-                        String key = ((TextView) v).getText().toString();
-                        for (Integer i : mSwitchMap.get(key)) {
-                            String s = i.toString();
-                            for (int r = 0; r < Grid.GRID_SIZE; r++) {
-                                for (int c = 0; c < Grid.GRID_SIZE; c++) {
-                                    Integer k = r*Grid.GRID_SIZE + c;
-                                    if (s.equals(k.toString())) {
-                                        mGrid.toggleCellColor(r, c);
+                        toggleCells(((TextView) v).getText().toString());
 
-                                        boolean isBlack = mGrid.getCell(r, c).isBlack;
-
-                                        TextView cell = (TextView) mGridTableLayout.findViewById(k);
-                                        cell.setBackgroundColor(isBlack ? mPrimaryColor : mSecondaryColor);
-                                        cell.setTextColor(isBlack ? mSecondaryColor : mPrimaryColor);
-                                    }
-                                }
-                            }
-                        }
+                        checkForWin();
                     }
                 });
 
@@ -179,7 +164,9 @@ public class MainActivity extends AppCompatActivity {
         mWhiteButton.setBackgroundColor(mSecondaryColor);
         mWhiteButton.setTextColor(mPrimaryColor);
 
-        mTargetState = TargetState.BLACK;
+        mTargetState = CellColor.BLACK;
+
+        checkForWin();
     }
 
     public void onWhiteClick(View view) {
@@ -189,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
         mBlackButton.setBackgroundColor(mSecondaryColor);
         mBlackButton.setTextColor(mPrimaryColor);
 
-        mTargetState = TargetState.WHITE;
+        mTargetState = CellColor.WHITE;
+
+        checkForWin();
     }
 
     @Override
@@ -205,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_restart:
                 updateMoveCount(0);
+                mGrid.regenerate();
+                updateGridTable();
                 break;
             case R.id.action_auto:
                 Toast.makeText(this, "Auto", Toast.LENGTH_SHORT).show();
@@ -220,6 +211,49 @@ public class MainActivity extends AppCompatActivity {
         String moveCountText = getResources().getString(R.string.move_count_text);
         mMoveCount = newCount;
         mMoveCountTextView.setText(moveCountText + " " + newCount);
+    }
+
+    public void updateGridTable() {
+        for (int r = 0; r < Grid.GRID_SIZE; r++) {
+            for (int c = 0; c < Grid.GRID_SIZE; c++) {
+                int k = r*Grid.GRID_SIZE + c;
+
+                boolean isBlack = mGrid.getCell(r, c).isBlack();
+
+                TextView cellView = (TextView) mGridTableLayout.findViewById(k);
+                cellView.setBackgroundColor(isBlack ? mPrimaryColor : mSecondaryColor);
+                cellView.setTextColor(isBlack ? mSecondaryColor : mPrimaryColor);
+            }
+        }
+    }
+
+    public void toggleCells(String key) {
+        for (Integer i : mSwitchMap.get(key)) {
+            int r = i % Grid.GRID_SIZE;
+            int c = i / Grid.GRID_SIZE;
+
+            boolean isBlack = mGrid.getCell(r, c).isBlack();
+
+            mGrid.getCell(r, c).color = isBlack ? CellColor.WHITE : CellColor.BLACK;
+        }
+
+        updateGridTable();
+    }
+
+    public void checkForWin() {
+        boolean won = true;
+        for (int r = 0; r < Grid.GRID_SIZE; r++) {
+            for (int c = 0; c < Grid.GRID_SIZE; c++) {
+                boolean cellIsBlack = mGrid.getCell(r, c).isBlack();
+                boolean targetStateIsBlack = mTargetState == CellColor.BLACK;
+                if ((cellIsBlack && !targetStateIsBlack) || (!cellIsBlack && targetStateIsBlack)) {
+                    won = false;
+                }
+            }
+        }
+        if (won) {
+            Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public int dipToPixels(Context context, int dip) {
