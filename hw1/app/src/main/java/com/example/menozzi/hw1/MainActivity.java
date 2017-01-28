@@ -16,6 +16,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     enum TargetState {
@@ -39,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     int mMoveCount = 0;
 
+    Grid mGrid = new Grid();
+
+    Map<String, Integer[]> mSwitchMap = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
         mMoveCountTextView.append(" 0");
 
         mSequenceTextView = (TextView) findViewById(R.id.sequence_textview);
+
+        mSwitchMap.put("A", new Integer[]{0,1,2});
+        mSwitchMap.put("B", new Integer[]{3,7,9,11});
+        mSwitchMap.put("C", new Integer[]{4,10,14,15});
+        mSwitchMap.put("D", new Integer[]{0,4,5,6,7});
+        mSwitchMap.put("E", new Integer[]{6,7,8,10,12});
+        mSwitchMap.put("F", new Integer[]{0,2,14,15});
+        mSwitchMap.put("G", new Integer[]{3,14,15});
+        mSwitchMap.put("H", new Integer[]{4,5,7,14,15});
+        mSwitchMap.put("I", new Integer[]{1,2,3,4,5});
+        mSwitchMap.put("J", new Integer[]{3,4,5,9,13});
     }
 
     public void setupGridTable() {
@@ -67,10 +85,9 @@ public class MainActivity extends AppCompatActivity {
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                                                           TableRow.LayoutParams.WRAP_CONTENT));
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
-                boolean rowEven = r % 2 == 0;
-                boolean colEven = c % 2 == 0;
+                int k = r*Grid.GRID_SIZE + c;
 
-                boolean darkSquare = rowEven == colEven;
+                boolean darkSquare = mGrid.getCell(r, c).isBlack;
 
                 int padding = dipToPixels(this, 4);
 
@@ -82,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 cell.setBackgroundColor(darkSquare ? mPrimaryColor : mSecondaryColor);
                 cell.setTextColor(darkSquare ? mSecondaryColor : mPrimaryColor);
                 cell.setGravity(Gravity.CENTER);
-                cell.setText(String.valueOf(r*Grid.GRID_SIZE+ c));
+                cell.setText(String.valueOf(k));
                 cell.setTextSize(40);
                 cell.setPadding(padding, padding, padding, padding);
                 cell.setWidth(w);
                 cell.setHeight(h);
+                cell.setId(k);
 
                 row.addView(cell);
             }
@@ -124,7 +142,26 @@ public class MainActivity extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        updateMoveCount(++mMoveCount);
+                        updateMoveCount(mMoveCount+1);
+
+                        String key = ((TextView) v).getText().toString();
+                        for (Integer i : mSwitchMap.get(key)) {
+                            String s = i.toString();
+                            for (int r = 0; r < Grid.GRID_SIZE; r++) {
+                                for (int c = 0; c < Grid.GRID_SIZE; c++) {
+                                    Integer k = r*Grid.GRID_SIZE + c;
+                                    if (s.equals(k.toString())) {
+                                        mGrid.toggleCellColor(r, c);
+
+                                        boolean isBlack = mGrid.getCell(r, c).isBlack;
+
+                                        TextView cell = (TextView) mGridTableLayout.findViewById(k);
+                                        cell.setBackgroundColor(isBlack ? mPrimaryColor : mSecondaryColor);
+                                        cell.setTextColor(isBlack ? mSecondaryColor : mPrimaryColor);
+                                    }
+                                }
+                            }
+                        }
                     }
                 });
 
@@ -167,8 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_restart:
-                mMoveCount = 0;
-                updateMoveCount(mMoveCount);
+                updateMoveCount(0);
                 break;
             case R.id.action_auto:
                 Toast.makeText(this, "Auto", Toast.LENGTH_SHORT).show();
@@ -182,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateMoveCount(int newCount) {
         String moveCountText = getResources().getString(R.string.move_count_text);
+        mMoveCount = newCount;
         mMoveCountTextView.setText(moveCountText + " " + newCount);
     }
 

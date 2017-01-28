@@ -38,6 +38,10 @@ public class Grid {
         grid[r][c] = cell;
     }
 
+    public void toggleCellColor(int r, int c) {
+        grid[r][c].isBlack = !grid[r][c].isBlack;
+    }
+
     public Grid copy() {
         Grid clone = new Grid();
         for (int r = 0; r < GRID_SIZE; r++) {
