@@ -1,6 +1,7 @@
 package com.example.menozzi.hw1;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -270,7 +271,19 @@ public class MainActivity extends AppCompatActivity {
         if (sequence != null) {
             updateSequence(sequence);
         } else {
-            Toast.makeText(this, "No solution", Toast.LENGTH_SHORT).show();
+            final Toast t = Toast.makeText(this, "No solution", Toast.LENGTH_SHORT);
+
+            new CountDownTimer(400, 100) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    t.show();
+                }
+
+                @Override
+                public void onFinish() {
+                    t.cancel();
+                }
+            }.start();
         }
     }
 
