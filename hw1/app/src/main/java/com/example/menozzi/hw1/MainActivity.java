@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
     TableLayout mGridTableLayout;
     TableLayout mSwitchTableLayout;
 
-    TextView mMoveCountTextView;
-    TextView mSequenceTextView;
+    TextView mMoveCountContentTextView;
+    TextView mSequenceContentTextView;
 
     int mMoveCount = 0;
 
@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         setupSwitchTable();
 
-        mMoveCountTextView = (TextView) findViewById(R.id.move_count_textview);
-        mMoveCountTextView.append(" 0");
+        mMoveCountContentTextView = (TextView) findViewById(R.id.move_count_content_textview);
+        mMoveCountContentTextView.append("0");
 
-        mSequenceTextView = (TextView) findViewById(R.id.sequence_textview);
+        mSequenceContentTextView = (TextView) findViewById(R.id.sequence_content_textview);
 
         SWITCH_MAP.put("A", new Integer[]{0,1,2});
         SWITCH_MAP.put("B", new Integer[]{3,7,9,11});
@@ -214,14 +214,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateMoveCount(int newCount) {
-        String moveCountText = getResources().getString(R.string.move_count_text);
         mMoveCount = newCount;
-        mMoveCountTextView.setText(moveCountText + " " + newCount);
+        mMoveCountContentTextView.setText(String.valueOf(newCount));
     }
 
     public void updateSequence(String sequence) {
-        String sequenceText = getResources().getString(R.string.sequence_text);
-        mSequenceTextView.setText(sequenceText + " " + sequence);
+        mSequenceContentTextView.setText(String.valueOf(sequence));
     }
 
     public void updateGridTable() {

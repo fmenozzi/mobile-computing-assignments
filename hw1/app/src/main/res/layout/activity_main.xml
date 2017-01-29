@@ -70,28 +70,56 @@
 
     </TableLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TableLayout
+        android:id="@+id/textviews_table"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/move_count_textview"
-            android:text="@string/move_count_text"
-            android:textSize="20sp"
-            android:layout_marginBottom="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <TableRow>
 
-        <TextView
-            android:id="@+id/sequence_textview"
-            android:text="@string/sequence_text"
-            android:textSize="20sp"
-            android:layout_marginTop="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/move_count_label_textview"
+                android:text="@string/move_count_label_text"
+                android:textSize="20sp"
+                android:textAlignment="viewEnd"
+                android:layout_gravity="end"
+                android:layout_marginBottom="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/move_count_content_textview"
+                android:textSize="20sp"
+                android:paddingLeft="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/sequence_label_textview"
+                android:text="@string/sequence_label_text"
+                android:textSize="20sp"
+                android:textAlignment="viewEnd"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/sequence_content_textview"
+                android:textSize="20sp"
+                android:paddingLeft="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </TableRow>
+
+    </TableLayout>
 
 </LinearLayout>
