@@ -3,6 +3,8 @@ package com.example.menozzi.hw1;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class AutoSolver {
@@ -61,6 +63,14 @@ public class AutoSolver {
         for (int i = 0; i < combinations.length; i++) {
             combinations[i] = toSwitchString(toPaddedBinaryString(i));
         }
+
+        Arrays.sort(combinations, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.length() - s2.length();
+            }
+        });
+
         return combinations;
     }
 }
