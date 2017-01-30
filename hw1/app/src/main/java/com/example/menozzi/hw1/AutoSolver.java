@@ -15,7 +15,7 @@ public class AutoSolver {
     private static final String[] ALL_COMBINATIONS = generateCombinations();
 
     @Nullable
-    public static String solve(@NonNull Grid grid, CellColor targetState) {
+    public static String solve(@NonNull Grid grid, @NonNull CellColor targetState) {
         for (String sequence : ALL_COMBINATIONS) {
             if (trySequence(sequence, grid, targetState)) {
                 return sequence;
@@ -24,7 +24,9 @@ public class AutoSolver {
         return null;
     }
 
-    private static boolean trySequence(@NonNull String sequence, @NonNull Grid grid, CellColor targetState) {
+    private static boolean trySequence(@NonNull String sequence,
+                                       @NonNull Grid grid,
+                                       @NonNull CellColor targetState) {
         Grid temp = grid.copy();
 
         for (int i = 0; i < sequence.length(); i++) {
