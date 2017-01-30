@@ -284,6 +284,8 @@ public class MainActivity extends AppCompatActivity {
                     t.cancel();
                 }
             }.start();
+
+            updateSequence("");
         }
     }
 
