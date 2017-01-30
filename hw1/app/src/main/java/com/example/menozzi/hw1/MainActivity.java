@@ -102,6 +102,19 @@ public class MainActivity extends AppCompatActivity {
                 cell.setWidth(w);
                 cell.setHeight(h);
                 cell.setId(k);
+                cell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int i = v.getId();
+
+                        int r = i / Grid.GRID_SIZE;
+                        int c = i % Grid.GRID_SIZE;
+
+                        mGrid.toggleCellColor(r, c);
+
+                        updateGridTable();
+                    }
+                });
 
                 row.addView(cell);
             }
