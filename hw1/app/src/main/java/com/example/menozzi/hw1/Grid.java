@@ -9,17 +9,17 @@ public class Grid {
         public int row;
         public int col;
 
-        public MainActivity.CellColor color;
+        public CellColor color;
 
         public Cell(int row, int col, boolean isBlack) {
             this.row = row;
             this.col = col;
 
-            this.color = isBlack ? MainActivity.CellColor.BLACK : MainActivity.CellColor.WHITE;
+            this.color = isBlack ? CellColor.BLACK : CellColor.WHITE;
         }
 
         public boolean isBlack() {
-            return this.color == MainActivity.CellColor.BLACK;
+            return this.color == CellColor.BLACK;
         }
     }
 
@@ -50,7 +50,7 @@ public class Grid {
 
     public void toggleCellColor(int r, int c) {
         Cell cell = grid[r][c];
-        cell.color = cell.isBlack() ? MainActivity.CellColor.WHITE : MainActivity.CellColor.BLACK;
+        cell.color = cell.isBlack() ? CellColor.WHITE : CellColor.BLACK;
     }
 
     @NonNull
@@ -64,7 +64,7 @@ public class Grid {
         return clone;
     }
 
-    public boolean allCellColorsAre(MainActivity.CellColor targetState) {
+    public boolean allCellColorsAre(CellColor targetState) {
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {
                 if (targetState != grid[r][c].color) {

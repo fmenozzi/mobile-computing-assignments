@@ -23,11 +23,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public enum CellColor {
-        BLACK,
-        WHITE,
-    }
-
     CellColor mTargetState = CellColor.BLACK;
 
     Button mBlackButton;
