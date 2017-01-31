@@ -105,14 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 cell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int i = v.getId();
-
-                        int r = i / Grid.GRID_SIZE;
-                        int c = i % Grid.GRID_SIZE;
-
-                        mGrid.toggleCellColor(r, c);
-
-                        updateGridTable();
+                        toggleCellById(v.getId());
                     }
                 });
 
@@ -154,9 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         updateMoveCount(mMoveCount+1);
 
-                        toggleCells(((TextView) v).getText().toString());
-
-                        checkForWin();
+                        toggleCellsBySequence(((TextView) v).getText().toString());
                     }
                 });
 
@@ -206,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
                 updateMoveCount(0);
                 updateSequence("");
                 resetGrid();
-                updateGridTable();
                 break;
             case R.id.action_auto:
                 autoSolve();
@@ -220,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void resetGrid() {
         mGrid.reset();
+
+        updateGridTable();
     }
 
     public void updateMoveCount(int newCount) {
@@ -245,15 +237,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void toggleCells(String key) {
+    public void toggleCellsBySequence(String key) {
         for (Integer i : SWITCH_MAP.get(key)) {
-            int r = i / Grid.GRID_SIZE;
-            int c = i % Grid.GRID_SIZE;
-
-            mGrid.toggleCellColor(r, c);
+            toggleCellById(i);
         }
+    }
+
+    public void toggleCellById(int id) {
+        int r = id / Grid.GRID_SIZE;
+        int c = id % Grid.GRID_SIZE;
+
+        mGrid.toggleCellColor(r, c);
 
         updateGridTable();
+
+        checkForWin();
     }
 
     public void checkForWin() {
