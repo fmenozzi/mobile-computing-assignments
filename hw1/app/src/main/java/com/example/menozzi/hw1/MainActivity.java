@@ -275,9 +275,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void autoSolve() {
-        String sequence = AutoSolver.solve(mGrid, mTargetState);
+        final String sequence = AutoSolver.solve(mGrid, mTargetState);
         if (sequence != null) {
-            updateSequence(sequence);
+            int delay = 500;
+            int totalInterval = delay * (sequence.length() + 1);
+
+            new CountDownTimer(totalInterval, delay) {
+                private int animationIdx = 0;
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    String subsequence = sequence.substring(0, animationIdx+1);
+
+                    String switchStr = subsequence.substring(animationIdx, animationIdx+1);
+
+                    toggleCellsBySequence(switchStr);
+                    updateSequence(subsequence);
+                    updateMoveCount(mMoveCount+1);
+
+                    animationIdx += 1;
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            }.start();
         } else {
             final Toast t = Toast.makeText(this, "No solution", Toast.LENGTH_SHORT);
 
