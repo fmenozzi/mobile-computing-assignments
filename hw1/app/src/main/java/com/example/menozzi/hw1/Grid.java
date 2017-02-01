@@ -39,6 +39,9 @@ public class Grid {
         grid[r][c] = cell;
     }
 
+    /**
+     * Reset board to a pseudorandom configuration
+     */
     public void reset() {
         Random rng = new Random();
         for (int r = 0; r < GRID_SIZE; r++) {
@@ -48,11 +51,24 @@ public class Grid {
         }
     }
 
+    /**
+     * Toggle individual cell color
+     *
+     * @param r
+     *          Cell row index
+     * @param c
+     *          Cell column index
+     */
     public void toggleCellColor(int r, int c) {
         Cell cell = grid[r][c];
         cell.color = cell.isBlack() ? CellColor.WHITE : CellColor.BLACK;
     }
 
+    /**
+     * Create a deep copy of the Grid for use in the autosolver
+     *
+     * @return A deep copy of the Grid
+     */
     @NonNull
     public Grid copy() {
         Grid clone = new Grid();
@@ -64,6 +80,14 @@ public class Grid {
         return clone;
     }
 
+    /**
+     * Check whether all cells in the board match the target state
+     *
+     * @param targetState
+     *          State to match
+     *
+     * @return Whether all cell colors match the target state
+     */
     public boolean allCellColorsAre(CellColor targetState) {
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {
