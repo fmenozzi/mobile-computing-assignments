@@ -27,8 +27,25 @@ public class Grid {
 
     private Cell[][] grid = new Cell[GRID_SIZE][GRID_SIZE];
 
+    /**
+     * Reset the grid to a pseudorandom configuration
+     */
     public Grid() {
         reset();
+    }
+
+    /**
+     * Perform deep-copy construction from another grid
+     *
+     * @param other
+     *          Grid to deep-copy from
+     */
+    public Grid(Grid other) {
+        for (int r = 0; r < GRID_SIZE; r++) {
+            for (int c = 0; c < GRID_SIZE; c++) {
+                grid[r][c] = new Cell(r, c, other.getCell(r,c).isBlack()) ;
+            }
+        }
     }
 
     public Cell getCell(int r, int c) {
@@ -62,22 +79,6 @@ public class Grid {
     public void toggleCellColor(int r, int c) {
         Cell cell = grid[r][c];
         cell.color = cell.isBlack() ? CellColor.WHITE : CellColor.BLACK;
-    }
-
-    /**
-     * Create a deep copy of the Grid for use in the autosolver
-     *
-     * @return A deep copy of the Grid
-     */
-    @NonNull
-    public Grid copy() {
-        Grid clone = new Grid();
-        for (int r = 0; r < GRID_SIZE; r++) {
-            for (int c = 0; c < GRID_SIZE; c++) {
-                clone.setCell(r, c, new Cell(r, c, getCell(r, c).isBlack()));
-            }
-        }
-        return clone;
     }
 
     /**

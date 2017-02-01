@@ -54,7 +54,7 @@ public class AutoSolver {
     private static boolean trySequence(@NonNull String sequence,
                                        @NonNull Grid grid,
                                        @NonNull CellColor targetState) {
-        Grid temp = grid.copy();
+        Grid temp = new Grid(grid);
 
         for (int i = 0; i < sequence.length(); i++) {
             String switchStr = Character.toString(sequence.charAt(i));
