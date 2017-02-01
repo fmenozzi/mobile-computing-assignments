@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 button.setText(Character.toString((char) ascii));
                 button.setTextSize(32);
                 button.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
+                button.setId(ascii);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -198,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_restart:
                 updateMoveCount(0);
                 updateSequence("");
+                resetSwitches();
                 resetGrid();
                 break;
             case R.id.action_auto:
@@ -214,6 +216,14 @@ public class MainActivity extends AppCompatActivity {
         mGrid.reset();
 
         updateGridTable();
+    }
+
+    public void resetSwitches() {
+        for (int i = (int)'A'; i <= (int)'J'; i++) {
+            TextView switchView = (TextView) mSwitchTableLayout.findViewById(i);
+            switchView.setBackgroundColor(mPrimaryColor);
+            switchView.setTextColor(mSecondaryColor);
+        }
     }
 
     public void updateMoveCount(int newCount) {
@@ -288,6 +298,12 @@ public class MainActivity extends AppCompatActivity {
                     String subsequence = sequence.substring(0, animationIdx+1);
 
                     String switchStr = subsequence.substring(animationIdx, animationIdx+1);
+
+                    int id = (int) switchStr.charAt(0);
+
+                    TextView switchView = (TextView) mSwitchTableLayout.findViewById(id);
+                    switchView.setBackgroundColor(mTertiaryColor);
+                    switchView.setTextColor(mSecondaryColor);
 
                     toggleCellsBySequence(switchStr);
                     updateSequence(subsequence);
