@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     int mPrimaryColor;
     int mSecondaryColor;
+    int mTertiaryColor;
 
     TableLayout mGridTableLayout;
     TableLayout mSwitchTableLayout;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         mPrimaryColor = ContextCompat.getColor(this, R.color.colorPrimaryDark);
         mSecondaryColor = ContextCompat.getColor(this, R.color.colorSecondary);
+        mTertiaryColor = ContextCompat.getColor(this, R.color.colorAccent);
 
         setupGridTable();
 
