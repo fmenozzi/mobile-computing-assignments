@@ -378,19 +378,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }.start();
         } else {
-            final Toast t = Toast.makeText(this, "No solution", Toast.LENGTH_SHORT);
-
-            new CountDownTimer(400, 100) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    t.show();
-                }
-
-                @Override
-                public void onFinish() {
-                    t.cancel();
-                }
-            }.start();
+            Toast.makeText(this, "No solution", Toast.LENGTH_SHORT).show();
 
             updateSequence("");
         }
