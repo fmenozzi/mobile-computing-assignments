@@ -322,25 +322,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Check for win condition on the current grid and announce via Toast
-     * if applicable
+     * Announce via Toast if player has won by checking whether every
+     * cell color matches the target
      */
     public void checkForWin() {
-        boolean won = true;
-
         for (int r = 0; r < Grid.GRID_SIZE; r++) {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
                 boolean cellIsBlack = mGrid.getCell(r, c).isBlack();
                 boolean targetStateIsBlack = mTargetState == CellColor.BLACK;
                 if ((cellIsBlack && !targetStateIsBlack) || (!cellIsBlack && targetStateIsBlack)) {
-                    won = false;
+                    return;
                 }
             }
         }
 
-        if (won) {
-            Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
     }
 
     /**
