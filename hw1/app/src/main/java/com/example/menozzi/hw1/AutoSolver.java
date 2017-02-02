@@ -109,7 +109,7 @@ public class AutoSolver {
     /**
      * Enumerate all possible switch sequences as follows:
      *
-     *      1) Count from 0 to 1023
+     *      1) Count from 1 to 1023
      *      2) Convert each integer into its corresponding
      *         binary number, padded to 10 bits
      *      3) Convert padded binary number and use it to
@@ -127,9 +127,9 @@ public class AutoSolver {
      */
     @NonNull
     private static String[] generateCombinations() {
-        String[] combinations = new String[1024];
-        for (int i = 0; i < combinations.length; i++) {
-            combinations[i] = toSwitchString(toPaddedBinaryString(i));
+        String[] combinations = new String[1023];
+        for (int i = 1; i <= combinations.length; i++) {
+            combinations[i-1] = toSwitchString(toPaddedBinaryString(i));
         }
 
         Arrays.sort(combinations, new Comparator<String>() {
