@@ -77,6 +77,35 @@ public class MainActivity extends AppCompatActivity {
         SWITCH_MAP.put("J", new Integer[]{3,4,5,9,13});
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_restart:
+                updateMoveCount(0);
+                updateSequence("");
+                resetSwitches();
+                resetGrid();
+                break;
+            case R.id.action_auto:
+                updateSequence("");
+                resetSwitches();
+                autoSolve();
+                break;
+            default:
+                Toast.makeText(this, "How did we even get here?", Toast.LENGTH_SHORT).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Generates grid table views
      */
@@ -201,35 +230,6 @@ public class MainActivity extends AppCompatActivity {
         mTargetState = CellColor.WHITE;
 
         checkForWin();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_restart:
-                updateMoveCount(0);
-                updateSequence("");
-                resetSwitches();
-                resetGrid();
-                break;
-            case R.id.action_auto:
-                updateSequence("");
-                resetSwitches();
-                autoSolve();
-                break;
-            default:
-                Toast.makeText(this, "How did we even get here?", Toast.LENGTH_SHORT).show();
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
