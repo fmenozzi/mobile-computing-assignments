@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         updateMoveCount(mMoveCount+1);
-
+                        resetSwitches();
                         toggleCellsBySequence(((TextView) v).getText().toString());
                     }
                 });
