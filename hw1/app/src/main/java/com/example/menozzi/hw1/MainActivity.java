@@ -221,6 +221,8 @@ public class MainActivity extends AppCompatActivity {
                 resetGrid();
                 break;
             case R.id.action_auto:
+                updateSequence("");
+                resetSwitches();
                 autoSolve();
                 break;
             default:
