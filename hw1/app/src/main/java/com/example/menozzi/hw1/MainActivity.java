@@ -335,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
     }
 

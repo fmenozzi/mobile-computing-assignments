@@ -104,7 +104,6 @@ public class AutoSolver {
                 sb.append(ALL_SWITCHES.charAt(i));
             }
         }
-
         return sb.toString();
     }
 
