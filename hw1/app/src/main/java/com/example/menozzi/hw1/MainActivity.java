@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
                 int k = r*Grid.GRID_SIZE + c;
 
-                boolean darkSquare = mGrid.getCell(r, c).isBlack();
+                boolean darkSquare = mGrid.isBlackAt(r, c);
 
                 int padding = dipToPixels(this, 4);
 
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
                 int k = r*Grid.GRID_SIZE + c;
 
-                boolean isBlack = mGrid.getCell(r, c).isBlack();
+                boolean isBlack = mGrid.isBlackAt(r, c);
 
                 TextView cellView = (TextView) mGridTableLayout.findViewById(k);
                 cellView.setBackgroundColor(isBlack ? mPrimaryColor : mSecondaryColor);
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
     public void checkForWin() {
         for (int r = 0; r < Grid.GRID_SIZE; r++) {
             for (int c = 0; c < Grid.GRID_SIZE; c++) {
-                boolean cellIsBlack = mGrid.getCell(r, c).isBlack();
+                boolean cellIsBlack = mGrid.isBlackAt(r, c);
                 boolean targetStateIsBlack = mTargetState == CellColor.BLACK;
                 if ((cellIsBlack && !targetStateIsBlack) || (!cellIsBlack && targetStateIsBlack)) {
                     return;

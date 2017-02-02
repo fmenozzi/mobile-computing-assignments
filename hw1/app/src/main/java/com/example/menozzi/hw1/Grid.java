@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.Random;
 
 public class Grid {
-    public class Cell {
+    private class Cell {
         public int row;
         public int col;
 
@@ -19,7 +19,7 @@ public class Grid {
         }
 
         public boolean isBlack() {
-            return this.color == CellColor.BLACK;
+            return color == CellColor.BLACK;
         }
     }
 
@@ -40,20 +40,26 @@ public class Grid {
      * @param other
      *          Grid to deep-copy from
      */
-    public Grid(Grid other) {
+    public Grid(@NonNull Grid other) {
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {
-                grid[r][c] = new Cell(r, c, other.getCell(r,c).isBlack()) ;
+                grid[r][c] = new Cell(r, c, other.grid[r][c].isBlack());
             }
         }
     }
 
-    public Cell getCell(int r, int c) {
-        return grid[r][c];
-    }
-
-    public void setCell(int r, int c, @NonNull Cell cell) {
-        grid[r][c] = cell;
+    /**
+     * Determine whether a cell is black
+     *
+     * @param r
+     *          Cell row index
+     * @param c
+     *          Cell column index
+     *
+     * @return Whether the cell at the given indices is black
+     */
+    public boolean isBlackAt(int r, int c) {
+        return grid[r][c].isBlack();
     }
 
     /**
@@ -74,10 +80,10 @@ public class Grid {
      * @param other
      *          Grid from which to restore state
      */
-    public void restoreFrom(Grid other) {
+    public void restoreFrom(@NonNull Grid other) {
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {
-                grid[r][c].color = other.getCell(r, c).isBlack() ? CellColor.BLACK : CellColor.WHITE;
+                grid[r][c].color = other.isBlackAt(r, c) ? CellColor.BLACK : CellColor.WHITE;
             }
         }
     }
@@ -91,8 +97,7 @@ public class Grid {
      *          Cell column index
      */
     public void toggleCellColor(int r, int c) {
-        Cell cell = grid[r][c];
-        cell.color = cell.isBlack() ? CellColor.WHITE : CellColor.BLACK;
+        grid[r][c].color = grid[r][c].isBlack() ? CellColor.WHITE : CellColor.BLACK;
     }
 
     /**
@@ -103,7 +108,7 @@ public class Grid {
      *
      * @return Whether all cell colors match the target state
      */
-    public boolean allCellColorsAre(CellColor targetState) {
+    public boolean allCellColorsAre(@NonNull CellColor targetState) {
         for (int r = 0; r < GRID_SIZE; r++) {
             for (int c = 0; c < GRID_SIZE; c++) {
                 if (targetState != grid[r][c].color) {
