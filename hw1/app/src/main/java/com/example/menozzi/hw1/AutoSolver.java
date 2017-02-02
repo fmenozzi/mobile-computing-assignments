@@ -29,10 +29,12 @@ public class AutoSolver {
      */
     @Nullable
     public static String solve(@NonNull Grid grid, @NonNull CellColor targetState) {
+        Grid temp = new Grid(grid);
         for (String sequence : ALL_COMBINATIONS) {
-            if (trySequence(sequence, grid, targetState)) {
+            if (trySequence(sequence, temp, targetState)) {
                 return sequence;
             }
+            temp.restoreFrom(grid);
         }
         return null;
     }
@@ -54,19 +56,16 @@ public class AutoSolver {
     private static boolean trySequence(@NonNull String sequence,
                                        @NonNull Grid grid,
                                        @NonNull CellColor targetState) {
-        Grid temp = new Grid(grid);
-
         for (int i = 0; i < sequence.length(); i++) {
             String switchStr = Character.toString(sequence.charAt(i));
             for (Integer cellIdx : MainActivity.SWITCH_MAP.get(switchStr)) {
                 int r = cellIdx / Grid.GRID_SIZE;
                 int c = cellIdx % Grid.GRID_SIZE;
 
-                temp.toggleCellColor(r, c);
+                grid.toggleCellColor(r, c);
             }
         }
-
-        return temp.allCellColorsAre(targetState);
+        return grid.allCellColorsAre(targetState);
     }
 
     /**

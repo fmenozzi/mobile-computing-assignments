@@ -69,6 +69,20 @@ public class Grid {
     }
 
     /**
+     * Restore state of current Grid to match that of other
+     *
+     * @param other
+     *          Grid from which to restore state
+     */
+    public void restoreFrom(Grid other) {
+        for (int r = 0; r < GRID_SIZE; r++) {
+            for (int c = 0; c < GRID_SIZE; c++) {
+                grid[r][c].color = other.getCell(r, c).isBlack() ? CellColor.BLACK : CellColor.WHITE;
+            }
+        }
+    }
+
+    /**
      * Toggle individual cell color
      *
      * @param r
