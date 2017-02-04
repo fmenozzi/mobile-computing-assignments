@@ -18,6 +18,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mSequenceContentTextView;
 
     int mMoveCount = 0;
+
+    String mSequence = "";
 
     boolean mJustWon = false;
 
@@ -92,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_restart:
                 updateMoveCount(0);
-                updateSequence("");
+                setSequence("");
                 resetSwitches();
                 resetGrid();
                 break;
             case R.id.action_auto:
-                updateSequence("");
+                setSequence("");
                 resetSwitches();
                 autoSolve();
                 break;
@@ -144,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                         checkIfJustWon();
                         toggleCellById(v.getId());
                         resetSwitches();
-                        updateSequence("");
+                        setSequence("");
                     }
                 });
 
@@ -191,7 +194,10 @@ public class MainActivity extends AppCompatActivity {
                         checkIfJustWon();
                         updateMoveCount(mMoveCount+1);
                         resetSwitches();
-                        toggleCellsBySequence(((TextView) v).getText().toString());
+
+                        String viewText = ((TextView) v).getText().toString();
+                        toggleCellsBySequence(viewText);
+                        appendUniqueToSequence(viewText);
                     }
                 });
 
@@ -279,8 +285,30 @@ public class MainActivity extends AppCompatActivity {
      * @param sequence
      *          New sequence string to display
      */
-    public void updateSequence(String sequence) {
-        mSequenceContentTextView.setText(String.valueOf(sequence));
+    public void setSequence(String sequence) {
+        mSequence = sequence;
+        mSequenceContentTextView.setText(String.valueOf(mSequence));
+    }
+
+    /**
+     * Add the character represented by String s to the sequence
+     * String mSequence, if it doesn't already exist, and sort
+     * mSequence
+     *
+     * @param s
+     *          String representing character to append to sequence
+     *          text
+     */
+    public void appendUniqueToSequence(String s) {
+        if (!mSequence.contains(s)) {
+            mSequence += s;
+
+            char[] arr = mSequence.toCharArray();
+            Arrays.sort(arr);
+            mSequence = String.valueOf(arr);
+
+            setSequence(mSequence);
+        }
     }
 
     /**
@@ -357,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
         if (mJustWon) {
             mJustWon = false;
             resetSwitches();
-            updateSequence("");
+            setSequence("");
             updateMoveCount(0);
         }
     }
@@ -393,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
                         switchView.setTextColor(mSecondaryColor);
 
                         toggleCellsBySequence(switchStr);
-                        updateSequence(subsequence);
+                        appendUniqueToSequence(switchStr);
                         updateMoveCount(mMoveCount+1);
 
                         animationIdx += 1;
@@ -408,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No solution", Toast.LENGTH_SHORT).show();
 
-            updateSequence("");
+            setSequence("");
         }
     }
 
