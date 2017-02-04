@@ -140,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         toggleCellById(v.getId());
+                        resetSwitches();
+                        updateSequence("");
                     }
                 });
 
