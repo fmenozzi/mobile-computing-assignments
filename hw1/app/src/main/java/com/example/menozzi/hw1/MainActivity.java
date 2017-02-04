@@ -347,36 +347,40 @@ public class MainActivity extends AppCompatActivity {
     public void autoSolve() {
         final String sequence = AutoSolver.solve(mGrid, mTargetState);
         if (sequence != null) {
-            int delay = 500;
-            int totalInterval = delay * (sequence.length() + 1);
+            if (sequence.isEmpty()) {
+                checkForWin();
+            } else {
+                int delay = 500;
+                int totalInterval = delay * (sequence.length() + 1);
 
-            new CountDownTimer(totalInterval, delay) {
-                private int animationIdx = 0;
+                new CountDownTimer(totalInterval, delay) {
+                    private int animationIdx = 0;
 
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    String subsequence = sequence.substring(0, animationIdx+1);
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        String subsequence = sequence.substring(0, animationIdx+1);
 
-                    String switchStr = subsequence.substring(animationIdx, animationIdx+1);
+                        String switchStr = subsequence.substring(animationIdx, animationIdx+1);
 
-                    int id = (int) switchStr.charAt(0);
+                        int id = (int) switchStr.charAt(0);
 
-                    TextView switchView = (TextView) mSwitchTableLayout.findViewById(id);
-                    switchView.setBackgroundColor(mTertiaryColor);
-                    switchView.setTextColor(mSecondaryColor);
+                        TextView switchView = (TextView) mSwitchTableLayout.findViewById(id);
+                        switchView.setBackgroundColor(mTertiaryColor);
+                        switchView.setTextColor(mSecondaryColor);
 
-                    toggleCellsBySequence(switchStr);
-                    updateSequence(subsequence);
-                    updateMoveCount(mMoveCount+1);
+                        toggleCellsBySequence(switchStr);
+                        updateSequence(subsequence);
+                        updateMoveCount(mMoveCount+1);
 
-                    animationIdx += 1;
-                }
+                        animationIdx += 1;
+                    }
 
-                @Override
-                public void onFinish() {
+                    @Override
+                    public void onFinish() {
 
-                }
-            }.start();
+                    }
+                }.start();
+            }
         } else {
             Toast.makeText(this, "No solution", Toast.LENGTH_SHORT).show();
 
