@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String viewText = ((TextView) v).getText().toString();
                         toggleCellsBySequence(viewText);
-                        appendUniqueToSequence(viewText);
+                        toggleInSequence(viewText);
                     }
                 });
 
@@ -300,16 +300,17 @@ public class MainActivity extends AppCompatActivity {
      *          String representing character to append to sequence
      *          text
      */
-    public void appendUniqueToSequence(String s) {
-        if (!mSequence.contains(s)) {
+    public void toggleInSequence(String s) {
+        if (mSequence.contains(s)) {
+            mSequence = mSequence.replace(s, "");
+        } else {
             mSequence += s;
 
             char[] arr = mSequence.toCharArray();
             Arrays.sort(arr);
             mSequence = String.valueOf(arr);
-
-            setSequence(mSequence);
         }
+        setSequence(mSequence);
     }
 
     /**
@@ -422,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
                         switchView.setTextColor(mSecondaryColor);
 
                         toggleCellsBySequence(switchStr);
-                        appendUniqueToSequence(switchStr);
+                        toggleInSequence(switchStr);
                         updateMoveCount(mMoveCount+1);
 
                         animationIdx += 1;
