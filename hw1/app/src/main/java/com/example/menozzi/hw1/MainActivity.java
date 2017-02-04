@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     int mMoveCount = 0;
 
+    boolean mJustWon = false;
+
     Grid mGrid = new Grid();
 
     static final Map<String, Integer[]> SWITCH_MAP = new HashMap<>();
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 cell.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        checkIfJustWon();
                         toggleCellById(v.getId());
                         resetSwitches();
                         updateSequence("");
@@ -185,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        checkIfJustWon();
                         updateMoveCount(mMoveCount+1);
                         resetSwitches();
                         toggleCellsBySequence(((TextView) v).getText().toString());
@@ -214,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
         mTargetState = CellColor.BLACK;
 
         checkForWin();
+
+        checkIfJustWon();
     }
 
     /**
@@ -232,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
         mTargetState = CellColor.WHITE;
 
         checkForWin();
+
+        checkIfJustWon();
     }
 
     /**
@@ -338,6 +346,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         Toast.makeText(this, "You win!", Toast.LENGTH_SHORT).show();
+        mJustWon = true;
+    }
+
+    /**
+     * Check if the player's last move resulting in a win. If so, reset
+     * switch colors, sequence string, and move count.
+     */
+    public void checkIfJustWon() {
+        if (mJustWon) {
+            mJustWon = false;
+            resetSwitches();
+            updateSequence("");
+            updateMoveCount(0);
+        }
     }
 
     /**
