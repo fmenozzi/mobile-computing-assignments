@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 resetGrid();
                 break;
             case R.id.action_auto:
-                setSequence("");
                 resetSwitches();
                 autoSolve();
                 break;
@@ -404,6 +403,9 @@ public class MainActivity extends AppCompatActivity {
             if (sequence.isEmpty()) {
                 checkForWin();
             } else {
+                updateMoveCount(0);
+                setSequence("");
+
                 int delay = 500;
                 int totalInterval = delay * (sequence.length() + 1);
 
@@ -437,8 +439,6 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(this, "No solution", Toast.LENGTH_SHORT).show();
-
-            setSequence("");
         }
     }
 
