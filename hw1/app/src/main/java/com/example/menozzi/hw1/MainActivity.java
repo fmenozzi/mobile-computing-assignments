@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                         toggleCellById(v.getId());
                         resetSwitches();
                         setSequence("");
+                        updateMoveCount(0);
                     }
                 });
 
