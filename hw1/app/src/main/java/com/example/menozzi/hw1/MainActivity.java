@@ -48,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
     Grid mGrid = new Grid();
 
     static final Map<String, Integer[]> SWITCH_MAP = new HashMap<>();
+    static {
+        SWITCH_MAP.put("A", new Integer[]{0,1,2});
+        SWITCH_MAP.put("B", new Integer[]{3,7,9,11});
+        SWITCH_MAP.put("C", new Integer[]{4,10,14,15});
+        SWITCH_MAP.put("D", new Integer[]{0,4,5,6,7});
+        SWITCH_MAP.put("E", new Integer[]{6,7,8,10,12});
+        SWITCH_MAP.put("F", new Integer[]{0,2,14,15});
+        SWITCH_MAP.put("G", new Integer[]{3,14,15});
+        SWITCH_MAP.put("H", new Integer[]{4,5,7,14,15});
+        SWITCH_MAP.put("I", new Integer[]{1,2,3,4,5});
+        SWITCH_MAP.put("J", new Integer[]{3,4,5,9,13});
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +81,6 @@ public class MainActivity extends AppCompatActivity {
         mMoveCountContentTextView.append("0");
 
         mSequenceContentTextView = (TextView) findViewById(R.id.sequence_content_textview);
-
-        SWITCH_MAP.put("A", new Integer[]{0,1,2});
-        SWITCH_MAP.put("B", new Integer[]{3,7,9,11});
-        SWITCH_MAP.put("C", new Integer[]{4,10,14,15});
-        SWITCH_MAP.put("D", new Integer[]{0,4,5,6,7});
-        SWITCH_MAP.put("E", new Integer[]{6,7,8,10,12});
-        SWITCH_MAP.put("F", new Integer[]{0,2,14,15});
-        SWITCH_MAP.put("G", new Integer[]{3,14,15});
-        SWITCH_MAP.put("H", new Integer[]{4,5,7,14,15});
-        SWITCH_MAP.put("I", new Integer[]{1,2,3,4,5});
-        SWITCH_MAP.put("J", new Integer[]{3,4,5,9,13});
     }
 
     @Override
