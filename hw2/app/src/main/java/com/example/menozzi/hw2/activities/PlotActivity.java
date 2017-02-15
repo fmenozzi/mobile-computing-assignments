@@ -17,8 +17,8 @@ public class PlotActivity extends AppCompatActivity {
         setContentView(R.layout.activity_plot);
 
         mPlotView = (PlotView) findViewById(R.id.plotview);
-        mPlotView.setXAxis(new Axis(0.0, 5.0, 1.0, 0.0, 5.0, 0.0, "X Axis"));
-        mPlotView.setYAxis(new Axis(0.0, 5.0, 1.0, 0.0, 5.0, 0.0, "Y Axis"));
+        mPlotView.setXAxis(new Axis(0.0, 5.0, 1.0, "X Axis"));
+        mPlotView.setYAxis(new Axis(0.0, 5.0, 1.0, "Y Axis"));
         mPlotView.invalidate();
     }
 }
