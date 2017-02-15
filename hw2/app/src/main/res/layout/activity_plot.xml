@@ -14,7 +14,6 @@
     <com.example.menozzi.hw2.PlotView
         android:id="@+id/plotview"
         android:layout_gravity="center"
-        android:background="#dd0000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
