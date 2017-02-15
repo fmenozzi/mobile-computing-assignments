@@ -11,8 +11,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.menozzi.hw2.PlotActivity">
 
-    <TextView
-        android:text="Hello World!"
+    <com.example.menozzi.hw2.PlotView
+        android:id="@+id/plotview"
+        android:layout_gravity="center"
+        android:background="#dd0000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
