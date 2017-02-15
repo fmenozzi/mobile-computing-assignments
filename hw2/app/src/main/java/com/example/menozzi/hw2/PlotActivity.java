@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 public class PlotActivity extends AppCompatActivity {
 
+    Axis mXAxis;
+    Axis mYAxis;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
