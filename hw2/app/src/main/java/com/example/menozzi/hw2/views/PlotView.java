@@ -1,4 +1,4 @@
-package com.example.menozzi.hw2;
+package com.example.menozzi.hw2.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.menozzi.hw2.Axis;
 
 public class PlotView extends View {
 

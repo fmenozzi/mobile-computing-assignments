@@ -1,7 +1,11 @@
-package com.example.menozzi.hw2;
+package com.example.menozzi.hw2.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.menozzi.hw2.Axis;
+import com.example.menozzi.hw2.views.PlotView;
+import com.example.menozzi.hw2.R;
 
 public class PlotActivity extends AppCompatActivity {
 
