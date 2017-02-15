@@ -1,5 +1,6 @@
 package com.example.menozzi.hw2;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void tempClickCallback(View v) {
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, PlotActivity.class);
+        startActivity(intent);
     }
 }
