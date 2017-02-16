@@ -11,6 +11,22 @@ import com.example.menozzi.hw2.Axis;
 
 public class PlotView extends View {
 
+    private class LTRB {
+        int l, t, r, b;
+        LTRB(int l, int t, int r, int b) {
+            this.l = l;
+            this.t = t;
+            this.r = r;
+            this.b = b;
+        }
+        int width() {
+            return r-l;
+        }
+        int height() {
+            return b-t;
+        }
+    }
+
     Axis mXAxis;
     Axis mYAxis;
 
@@ -53,25 +69,23 @@ public class PlotView extends View {
 
         int margin = strokeWidth/2;
 
+        LTRB bounds = new LTRB(margin+100, margin+200, w-margin-100, h-margin-300);
+
         // Draw outer grid borders
-        int left = margin + 100;
-        int right = w-margin - 100;
-        int top = margin + 200;
-        int bottom = h-margin - 300;
-        canvas.drawRect(left, top, right, bottom, mGridPaint);
+        canvas.drawRect(bounds.l, bounds.t, bounds.r, bounds.b, mGridPaint);
 
         // Draw interior x-axis lines
-        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (right-left+margin));
+        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (bounds.width()+margin));
         for (int i = 1; i <= mXAxis.getNumTicks(); i++) {
-            int x = i*xInterval + left;
-            canvas.drawLine(x, top, x, bottom, mGridPaint);
+            int x = i*xInterval + bounds.l;
+            canvas.drawLine(x, bounds.t, x, bounds.b, mGridPaint);
         }
 
         // Draw interior y-axis lines
-        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (bottom-top+margin));
+        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (bounds.height()+margin));
         for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
-            int y = i*yInterval + top;
-            canvas.drawLine(left, y, right, y, mGridPaint);
+            int y = i*yInterval + bounds.t;
+            canvas.drawLine(bounds.l, y, bounds.r, y, mGridPaint);
         }
     }
 }
