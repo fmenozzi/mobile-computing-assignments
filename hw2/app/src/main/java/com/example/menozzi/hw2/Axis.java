@@ -16,4 +16,12 @@ public class Axis {
 
         this.label = label;
     }
+
+    public double getNormalizedIntervalLength() {
+        return resolution / (max-min);
+    }
+
+    public int getNumTicks() {
+        return (int)(((max-min)/resolution) - 1);
+    }
 }

@@ -37,17 +37,34 @@ public class PlotView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        drawGrid(canvas);
+    }
+
+    public void drawGrid(Canvas canvas) {
+        int strokeWidth = 4;
+
+        mGridPaint.setColor(Color.GRAY);
+        mGridPaint.setStrokeWidth(strokeWidth);
+        mGridPaint.setStrokeCap(Paint.Cap.ROUND);
+
         int w = canvas.getWidth();
         int h = canvas.getHeight();
 
-        mGridPaint.setColor(Color.GRAY);
-        mGridPaint.setAntiAlias(true);
+        int margin = strokeWidth/2;
+        canvas.drawLine(  margin,   margin,   margin, h-margin, mGridPaint);
+        canvas.drawLine(  margin,   margin, w-margin,   margin, mGridPaint);
+        canvas.drawLine(  margin, h-margin, w-margin, h-margin, mGridPaint);
+        canvas.drawLine(w-margin,   margin, w-margin, h-margin, mGridPaint);
 
-        for (int x = 0; x < w; x += w/8) {
+        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * w);
+        for (int i = 1; i <= mXAxis.getNumTicks(); i++) {
+            int x = i*xInterval + margin;
             canvas.drawLine(x, 0.0f, x, h, mGridPaint);
         }
 
-        for (int y = 0; y < h; y += h/8) {
+        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * h);
+        for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
+            int y = i*yInterval + margin;
             canvas.drawLine(0.0f, y, w, y, mGridPaint);
         }
     }
