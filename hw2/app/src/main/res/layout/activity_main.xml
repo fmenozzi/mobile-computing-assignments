@@ -12,8 +12,16 @@
     tools:context="com.example.menozzi.hw2.activities.MainActivity">
 
     <Button
-        android:id="@+id/temp_button"
-        android:text="Click Me"
+        android:id="@+id/sensor1_button"
+        android:text="Sensor 1"
+        android:onClick="tempClickCallback"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/sensor2_button"
+        android:text="Sensor 2"
         android:onClick="tempClickCallback"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
