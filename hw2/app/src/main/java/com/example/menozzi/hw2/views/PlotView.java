@@ -33,6 +33,7 @@ public class PlotView extends View {
 
     Paint mGridPaint = new Paint();
     Paint mTickPaint = new Paint();
+    Paint mTextPaint = new Paint();
 
     public PlotView(Context context) {
         super(context);
@@ -71,7 +72,7 @@ public class PlotView extends View {
 
         int margin = strokeWidth/2;
 
-        LTRB bounds = new LTRB(margin+150, margin+50, w-margin-50, h-margin-100);
+        LTRB bounds = new LTRB(margin+250, margin+250, w-margin-50, h-margin-300);
 
         // Draw outer grid borders
         canvas.drawRect(bounds.l, bounds.t, bounds.r, bounds.b, mGridPaint);
@@ -121,5 +122,21 @@ public class PlotView extends View {
             canvas.drawText(tickValue, leftAfterPadding, y, mTickPaint);
         }
         canvas.drawText(String.valueOf(mYAxis.max), leftAfterPadding, bounds.t + halfTextSize, mTickPaint);
+
+        mTextPaint.setColor(Color.GRAY);
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setTextSize(48);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        // Draw x-axis label
+        canvas.drawText(mXAxis.label, (bounds.r+bounds.l)/2, bottomAfterPadding + 100, mTextPaint);
+
+        // Draw y-axis label
+        canvas.save();
+        int yx = leftAfterPadding - 100;
+        int yy = (bounds.t+bounds.b)/2;
+        canvas.rotate(-90, yx, yy);
+        canvas.drawText(mYAxis.label, yx, yy, mTextPaint);
+        canvas.restore();
     }
 }
