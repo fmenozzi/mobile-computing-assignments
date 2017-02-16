@@ -44,28 +44,34 @@ public class PlotView extends View {
         int strokeWidth = 4;
 
         mGridPaint.setColor(Color.GRAY);
+        mGridPaint.setAntiAlias(true);
         mGridPaint.setStrokeWidth(strokeWidth);
-        mGridPaint.setStrokeCap(Paint.Cap.ROUND);
+        mGridPaint.setStyle(Paint.Style.STROKE);
 
         int w = canvas.getWidth();
         int h = canvas.getHeight();
 
         int margin = strokeWidth/2;
-        canvas.drawLine(  margin,   margin,   margin, h-margin, mGridPaint);
-        canvas.drawLine(  margin,   margin, w-margin,   margin, mGridPaint);
-        canvas.drawLine(  margin, h-margin, w-margin, h-margin, mGridPaint);
-        canvas.drawLine(w-margin,   margin, w-margin, h-margin, mGridPaint);
 
-        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * w);
+        // Draw outer grid borders
+        int left = margin + 100;
+        int right = w-margin - 100;
+        int top = margin + 200;
+        int bottom = h-margin - 300;
+        canvas.drawRect(left, top, right, bottom, mGridPaint);
+
+        // Draw interior x-axis lines
+        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (right-left+margin));
         for (int i = 1; i <= mXAxis.getNumTicks(); i++) {
-            int x = i*xInterval + margin;
-            canvas.drawLine(x, 0.0f, x, h, mGridPaint);
+            int x = i*xInterval + left;
+            canvas.drawLine(x, top, x, bottom, mGridPaint);
         }
 
-        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * h);
+        // Draw interior y-axis lines
+        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (bottom-top+margin));
         for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
-            int y = i*yInterval + margin;
-            canvas.drawLine(0.0f, y, w, y, mGridPaint);
+            int y = i*yInterval + top;
+            canvas.drawLine(left, y, right, y, mGridPaint);
         }
     }
 }
