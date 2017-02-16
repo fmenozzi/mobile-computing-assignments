@@ -31,9 +31,24 @@ public class PlotView extends View {
     Axis mXAxis;
     Axis mYAxis;
 
-    Paint mGridPaint = new Paint();
-    Paint mTickPaint = new Paint();
-    Paint mTextPaint = new Paint();
+    static Paint sGridPaint = new Paint();
+    static Paint sTickPaint = new Paint();
+    static Paint sTextPaint = new Paint();
+
+    static {
+        sGridPaint.setColor(Color.GRAY);
+        sGridPaint.setAntiAlias(true);
+        sGridPaint.setStyle(Paint.Style.STROKE);
+
+        sTickPaint.setColor(Color.GRAY);
+        sTickPaint.setAntiAlias(true);
+        sTickPaint.setTextSize(32);
+
+        sTextPaint.setColor(Color.GRAY);
+        sTextPaint.setAntiAlias(true);
+        sTextPaint.setTextSize(48);
+        sTextPaint.setTextAlign(Paint.Align.CENTER);
+    }
 
     public PlotView(Context context) {
         super(context);
@@ -62,10 +77,7 @@ public class PlotView extends View {
     public void drawGrid(Canvas canvas) {
         int strokeWidth = 4;
 
-        mGridPaint.setColor(Color.GRAY);
-        mGridPaint.setAntiAlias(true);
-        mGridPaint.setStrokeWidth(strokeWidth);
-        mGridPaint.setStyle(Paint.Style.STROKE);
+        sGridPaint.setStrokeWidth(strokeWidth);
 
         int w = canvas.getWidth();
         int h = canvas.getHeight();
@@ -75,68 +87,60 @@ public class PlotView extends View {
         LTRB bounds = new LTRB(margin+250, margin+250, w-margin-50, h-margin-300);
 
         // Draw outer grid borders
-        canvas.drawRect(bounds.l, bounds.t, bounds.r, bounds.b, mGridPaint);
+        canvas.drawRect(bounds.l, bounds.t, bounds.r, bounds.b, sGridPaint);
 
         // Draw interior x-axis lines
         int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (bounds.width()+margin));
         for (int i = 1; i <= mXAxis.getNumTicks(); i++) {
             int x = i*xInterval + bounds.l;
-            canvas.drawLine(x, bounds.t, x, bounds.b, mGridPaint);
+            canvas.drawLine(x, bounds.t, x, bounds.b, sGridPaint);
         }
 
         // Draw interior y-axis lines
         int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (bounds.height()+margin));
         for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
             int y = i*yInterval + bounds.t;
-            canvas.drawLine(bounds.l, y, bounds.r, y, mGridPaint);
+            canvas.drawLine(bounds.l, y, bounds.r, y, sGridPaint);
         }
 
-        mTickPaint.setColor(Color.GRAY);
-        mTickPaint.setAntiAlias(true);
-        mTickPaint.setTextSize(32);
-        mTickPaint.setTextAlign(Paint.Align.CENTER);
+        sTickPaint.setTextAlign(Paint.Align.CENTER);
 
         int leftAfterPadding = bounds.l - 50;
         int bottomAfterPadding = bounds.b + 60;
 
         // Draw x-axis tick values
-        canvas.drawText(String.valueOf(mXAxis.min), bounds.l, bottomAfterPadding, mTickPaint);
+        canvas.drawText(String.valueOf(mXAxis.min), bounds.l, bottomAfterPadding, sTickPaint);
         for (int i = 1; i <= mXAxis.getNumTicks(); i++) {
             int x = i*xInterval + bounds.l;
             String tickValue = String.valueOf(mXAxis.min + i*mXAxis.resolution);
-            canvas.drawText(tickValue, x, bottomAfterPadding, mTickPaint);
+            canvas.drawText(tickValue, x, bottomAfterPadding, sTickPaint);
         }
-        canvas.drawText(String.valueOf(mXAxis.max), bounds.r, bottomAfterPadding, mTickPaint);
+        canvas.drawText(String.valueOf(mXAxis.max), bounds.r, bottomAfterPadding, sTickPaint);
 
-        mTickPaint.setTextAlign(Paint.Align.RIGHT);
+        sTickPaint.setTextAlign(Paint.Align.RIGHT);
 
         Rect textBounds = new Rect();
-        mTickPaint.getTextBounds("0", 0, 1, textBounds);
+        sTickPaint.getTextBounds("0", 0, 1, textBounds);
         int halfTextSize = textBounds.height()/2;
 
         // Draw y-axis tick values
-        canvas.drawText(String.valueOf(mYAxis.min), leftAfterPadding, bounds.b + halfTextSize, mTickPaint);
+        canvas.drawText(String.valueOf(mYAxis.min), leftAfterPadding, bounds.b + halfTextSize, sTickPaint);
         for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
             int y = i*yInterval + bounds.t + halfTextSize;
             String tickValue = String.valueOf(mYAxis.min + (mYAxis.max-i)*mYAxis.resolution);
-            canvas.drawText(tickValue, leftAfterPadding, y, mTickPaint);
+            canvas.drawText(tickValue, leftAfterPadding, y, sTickPaint);
         }
-        canvas.drawText(String.valueOf(mYAxis.max), leftAfterPadding, bounds.t + halfTextSize, mTickPaint);
-
-        mTextPaint.setColor(Color.GRAY);
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setTextSize(48);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(String.valueOf(mYAxis.max), leftAfterPadding, bounds.t + halfTextSize, sTickPaint);
 
         // Draw x-axis label
-        canvas.drawText(mXAxis.label, (bounds.r+bounds.l)/2, bottomAfterPadding + 100, mTextPaint);
+        canvas.drawText(mXAxis.label, (bounds.r+bounds.l)/2, bottomAfterPadding + 100, sTextPaint);
 
         // Draw y-axis label
         canvas.save();
         int yx = leftAfterPadding - 100;
         int yy = (bounds.t+bounds.b)/2;
         canvas.rotate(-90, yx, yy);
-        canvas.drawText(mYAxis.label, yx, yy, mTextPaint);
+        canvas.drawText(mYAxis.label, yx, yy, sTextPaint);
         canvas.restore();
     }
 }
