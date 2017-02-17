@@ -1,5 +1,7 @@
 package com.example.menozzi.hw2;
 
+import android.support.annotation.NonNull;
+
 public class FixedCircularBuffer<T> {
     private T[] buf;
 
@@ -16,7 +18,7 @@ public class FixedCircularBuffer<T> {
         this.capacity = capacity;
     }
 
-    public void add(T element) {
+    public synchronized void add(@NonNull T element) {
         if (isFull()) {
             front = (front+1) % capacity;
         } else {
@@ -26,19 +28,20 @@ public class FixedCircularBuffer<T> {
         rear = (rear+1) % capacity;
     }
 
-    public T get(int i) {
+    @NonNull
+    public synchronized T get(int i) {
         return buf[(front + i) % capacity];
     }
 
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         return size == 0;
     }
 
-    public boolean isFull() {
+    private boolean isFull() {
         return size == capacity;
     }
 
-    public String toString() {
+    public synchronized String toString() {
         if (isEmpty()) {
             return "(len: 0, cap: " + capacity + ")";
         }
