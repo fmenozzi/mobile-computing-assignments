@@ -16,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    void tempClickCallback(View v) {
+    void buttonCallback(View v) {
         Intent intent = new Intent(this, PlotActivity.class);
-        intent.setData(Uri.parse((v.getId() == R.id.sensor1_button) ? "Sensor 1" : "Sensor 2"));
+        intent.setData(Uri.parse((v.getId() == R.id.light_sensor_button) ? "Light" : "Accelerometer"));
         startActivity(intent);
     }
 }

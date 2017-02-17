@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.menozzi.hw2.Axis;
+import com.example.menozzi.hw2.FixedCircularBuffer;
 
 public class PlotView extends View {
 
@@ -30,6 +31,8 @@ public class PlotView extends View {
 
     Axis mXAxis;
     Axis mYAxis;
+
+    FixedCircularBuffer<Float> mSensorData;
 
     static Paint sGridPaint = new Paint();
     static Paint sTickPaint = new Paint();
@@ -65,6 +68,10 @@ public class PlotView extends View {
     }
     public void setYAxis(Axis yAxis) {
         mYAxis = yAxis;
+    }
+
+    public void setSensorDataBuffer(FixedCircularBuffer<Float> buffer) {
+        mSensorData = buffer;
     }
 
     @Override
