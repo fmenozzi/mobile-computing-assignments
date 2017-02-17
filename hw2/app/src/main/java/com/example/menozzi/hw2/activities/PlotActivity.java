@@ -15,6 +15,9 @@ import com.example.menozzi.hw2.FixedCircularBuffer;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class PlotActivity extends AppCompatActivity implements SensorEventListener {
 
     PlotView mPlotView;
@@ -24,6 +27,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
     SensorManager mSensorManager;
     Sensor mSensor;
+
+    static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,6 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
-        if (mSensor== null) {
-            String msg = "No " + sensorName.toLowerCase() + " sensor detected";
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        } else {
-            mSensorManager.registerListener(this, mSensor, 500000);
-        }
 
         Axis xAxis = new Axis(0.0, 5.0, 1.0, "Time");
         Axis yAxis = new Axis(0.0, 5.0, 1.0, "Data");
@@ -55,6 +54,18 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
         mTextView = (TextView) findViewById(R.id.textview);
         mTextView.setText(getIntent().getData().toString());
+
+        if (mSensor == null) {
+            String msg = "No " + sensorName.toLowerCase() + " sensor detected";
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        } else {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
+                }
+            }, 0, 500);
+        }
     }
 
     @Override
@@ -66,11 +77,13 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mSensor, 500000);
+        mSensorManager.registerListener(this, mSensor, SENSOR_SAMPLING_RATE);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        mSensorManager.unregisterListener(this);
+
         switch (event.sensor.getType()) {
             case Sensor.TYPE_LIGHT:
                 float lux = event.values[0];
