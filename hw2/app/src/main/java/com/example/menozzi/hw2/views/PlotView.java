@@ -133,8 +133,8 @@ public class PlotView extends View {
         // Draw y-axis tick values
         canvas.drawText(String.valueOf(mYAxis.min), leftAfterPadding, bounds.b + halfTextSize, sTickPaint);
         for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
-            int y = i*yInterval + bounds.t + halfTextSize;
-            String tickValue = String.valueOf(mYAxis.min + (mYAxis.max-i)*mYAxis.resolution);
+            int y = bounds.b - i*yInterval + halfTextSize;
+            String tickValue = String.valueOf(mYAxis.min + i*mYAxis.resolution);
             canvas.drawText(tickValue, leftAfterPadding, y, sTickPaint);
         }
         canvas.drawText(String.valueOf(mYAxis.max), leftAfterPadding, bounds.t + halfTextSize, sTickPaint);
