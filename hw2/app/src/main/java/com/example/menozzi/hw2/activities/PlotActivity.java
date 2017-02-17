@@ -28,6 +28,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     SensorManager mSensorManager;
     Sensor mSensor;
 
+    Timer mTimer = new Timer();
+
     static final double LIGHT_AXIS_MIN = 0.0;
     static final double LIGHT_AXIS_MAX = 50.0;
     static final double LIGHT_AXIS_RESOLUTION = 10.0;
@@ -46,6 +48,12 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                             ACCEL_AXIS_RESOLUTION,
                                             ACCEL_AXIS_LABEL);
 
+    static final double X_AXIS_MIN = 0.0;
+    static final double X_AXIS_MAX = 6.0;
+    static final double X_AXIS_RESOLUTION = 1.0;
+    static final String X_AXIS_LABEL = "Elapsed Time (s)";
+    static final Axis X_AXIS = new Axis(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
+
     static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
     @Override
@@ -59,14 +67,13 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
 
-        Axis xAxis = new Axis(0.0,  5.0,  1.0, "Time");
-        Axis yAxis = (sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS;
+        mSensorData = new FixedCircularBuffer<>(X_AXIS.getNumTicks() + 2);
 
-        mSensorData = new FixedCircularBuffer<>(xAxis.getNumTicks() + 2);
+        X_AXIS.reset(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
 
         mPlotView = (PlotView) findViewById(R.id.plotview);
-        mPlotView.setXAxis(xAxis);
-        mPlotView.setYAxis(yAxis);
+        mPlotView.setXAxis(X_AXIS);
+        mPlotView.setYAxis((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
         mPlotView.setSensorDataBuffer(mSensorData);
         mPlotView.invalidate();
 
@@ -77,7 +84,7 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
             String msg = "No " + sensorName.toLowerCase() + " sensor detected";
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {
-            new Timer().schedule(new TimerTask() {
+            mTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
@@ -90,6 +97,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
+        mTimer.cancel();
+        mTimer.purge();
     }
 
     @Override
@@ -119,6 +128,10 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                 mSensorData.add(a);
 
                 break;
+        }
+
+        if (mSensorData.isFull()) {
+            X_AXIS.shiftLeft();
         }
 
         mPlotView.invalidate();

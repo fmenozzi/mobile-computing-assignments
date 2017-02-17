@@ -9,12 +9,7 @@ public class Axis {
     public String label;
 
     public Axis(double min, double max, double resolution, String label) {
-        this.min = min;
-        this.max = max;
-
-        this.resolution = resolution;
-
-        this.label = label;
+        reset(min, max, resolution, label);
     }
 
     public double getNormalizedIntervalLength() {
@@ -23,5 +18,19 @@ public class Axis {
 
     public int getNumTicks() {
         return (int)(((max-min)/resolution) - 1);
+    }
+
+    public void reset(double min, double max, double resolution, String label) {
+        this.min = min;
+        this.max = max;
+
+        this.resolution = resolution;
+
+        this.label = label;
+    }
+
+    public void shiftLeft() {
+        min += resolution;
+        max += resolution;
     }
 }

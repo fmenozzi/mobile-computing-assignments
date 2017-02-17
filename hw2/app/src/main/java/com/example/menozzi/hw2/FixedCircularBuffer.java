@@ -37,11 +37,11 @@ public class FixedCircularBuffer<T> {
         return size;
     }
 
-    private boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return size == 0;
     }
 
-    private boolean isFull() {
+    public synchronized boolean isFull() {
         return size == capacity;
     }
 
