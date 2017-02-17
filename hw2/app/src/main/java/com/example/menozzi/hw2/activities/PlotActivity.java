@@ -30,16 +30,17 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plot);
 
+        String sensorName = getIntent().getDataString();
+        int sensorType = sensorName.equals("Light") ? Sensor.TYPE_LIGHT : Sensor.TYPE_ACCELEROMETER;
+
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        int sensorType = getIntent().getData().toString().equals("Light")
-                         ? Sensor.TYPE_LIGHT
-                         : Sensor.TYPE_ACCELEROMETER;
         mSensor = mSensorManager.getDefaultSensor(sensorType);
         if (mSensor== null) {
-            Toast.makeText(this, "No sensor detected", Toast.LENGTH_SHORT).show();
+            String msg = "No " + sensorName.toLowerCase() + " sensor detected";
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        } else {
+            mSensorManager.registerListener(this, mSensor, 500000);
         }
-
-        mSensorManager.registerListener(this, mSensor, 500000);
 
         Axis xAxis = new Axis(0.0, 5.0, 1.0, "Time");
         Axis yAxis = new Axis(0.0, 5.0, 1.0, "Data");
