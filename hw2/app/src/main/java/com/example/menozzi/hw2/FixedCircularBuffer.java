@@ -33,6 +33,10 @@ public class FixedCircularBuffer<T> {
         return buf[(front + i) % capacity];
     }
 
+    public synchronized int getSize() {
+        return size;
+    }
+
     private boolean isEmpty() {
         return size == 0;
     }
