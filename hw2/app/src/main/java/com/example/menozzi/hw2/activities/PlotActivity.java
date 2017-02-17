@@ -28,6 +28,24 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     SensorManager mSensorManager;
     Sensor mSensor;
 
+    static final double LIGHT_AXIS_MIN = 0.0;
+    static final double LIGHT_AXIS_MAX = 50.0;
+    static final double LIGHT_AXIS_RESOLUTION = 10.0;
+    static final String LIGHT_AXIS_LABEL = "Luminance (lx)";
+    static final Axis LIGHT_AXIS = new Axis(LIGHT_AXIS_MIN,
+                                            LIGHT_AXIS_MAX,
+                                            LIGHT_AXIS_RESOLUTION,
+                                            LIGHT_AXIS_LABEL);
+
+    static final double ACCEL_AXIS_MIN = 0.0;
+    static final double ACCEL_AXIS_MAX = 12.0;
+    static final double ACCEL_AXIS_RESOLUTION = 2.0;
+    static final String ACCEL_AXIS_LABEL = "Acceleration (m/s^2)";
+    static final Axis ACCEL_AXIS = new Axis(ACCEL_AXIS_MIN,
+                                            ACCEL_AXIS_MAX,
+                                            ACCEL_AXIS_RESOLUTION,
+                                            ACCEL_AXIS_LABEL);
+
     static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
     @Override
@@ -41,8 +59,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
 
-        Axis xAxis = new Axis(0.0, 5.0, 1.0, "Time");
-        Axis yAxis = new Axis(0.0, 5.0, 1.0, "Data");
+        Axis xAxis = new Axis(0.0,  5.0,  1.0, "Time");
+        Axis yAxis = (sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS;
 
         mSensorData = new FixedCircularBuffer<>(xAxis.getNumTicks() + 2);
 
@@ -103,6 +121,7 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
 
+        mPlotView.invalidate();
         mTextView.setText(mSensorData.toString());
     }
 

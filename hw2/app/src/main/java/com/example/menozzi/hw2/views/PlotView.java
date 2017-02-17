@@ -34,9 +34,13 @@ public class PlotView extends View {
 
     FixedCircularBuffer<Float> mSensorData;
 
+    static final int POINT_RADIUS = 15;
+
     static Paint sGridPaint = new Paint();
     static Paint sTickPaint = new Paint();
     static Paint sTextPaint = new Paint();
+    static Paint sDataPaint = new Paint();
+    static Paint sLinePaint = new Paint();
 
     static {
         sGridPaint.setColor(Color.GRAY);
@@ -51,6 +55,11 @@ public class PlotView extends View {
         sTextPaint.setAntiAlias(true);
         sTextPaint.setTextSize(48);
         sTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        sDataPaint.setAntiAlias(true);
+
+        sLinePaint.setAntiAlias(true);
+        sLinePaint.setStrokeWidth(5);
     }
 
     public PlotView(Context context) {
@@ -149,5 +158,24 @@ public class PlotView extends View {
         canvas.rotate(-90, yx, yy);
         canvas.drawText(mYAxis.label, yx, yy, sTextPaint);
         canvas.restore();
+
+        sDataPaint.setColor(Color.GREEN);
+        sLinePaint.setColor(Color.GREEN);
+
+        // Draw sensor data points and lines
+        int size = mSensorData.getSize();
+        for (int i = 0; i < size; i++) {
+            float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
+
+            float cx = bounds.l + i*xInterval;
+            float cy = bounds.b - (mSensorData.get(i) * unitHeight);
+            canvas.drawCircle(cx, cy, POINT_RADIUS, sDataPaint);
+
+            if (i != size-1) {
+                float cx2 = bounds.l + (i+1)*xInterval;
+                float cy2 = bounds.b - (mSensorData.get(i+1) * unitHeight);
+                canvas.drawLine(cx, cy, cx2, cy2, sLinePaint);
+            }
+        }
     }
 }
