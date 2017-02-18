@@ -29,6 +29,15 @@ public class Axis {
         this.label = label;
     }
 
+    public void reset(Axis other) {
+        this.min = other.min;
+        this.max = other.max;
+
+        this.resolution = other.resolution;
+
+        this.label = other.label;
+    }
+
     public void shiftLeft() {
         min += resolution;
         max += resolution;

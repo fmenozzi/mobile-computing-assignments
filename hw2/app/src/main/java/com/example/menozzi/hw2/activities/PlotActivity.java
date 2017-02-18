@@ -54,6 +54,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     static final String X_AXIS_LABEL = "Elapsed Time (s)";
     static final Axis X_AXIS = new Axis(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
 
+    static final Axis Y_AXIS = new Axis(0,0,0,null);
+
     static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
     @Override
@@ -70,10 +72,11 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mSensorData = new FixedCircularBuffer<>(X_AXIS.getNumTicks() + 2);
 
         X_AXIS.reset(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
+        Y_AXIS.reset((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
 
         mPlotView = (PlotView) findViewById(R.id.plotview);
         mPlotView.setXAxis(X_AXIS);
-        mPlotView.setYAxis((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
+        mPlotView.setYAxis(Y_AXIS);
         mPlotView.setSensorDataBuffer(mSensorData);
         mPlotView.invalidate();
 
