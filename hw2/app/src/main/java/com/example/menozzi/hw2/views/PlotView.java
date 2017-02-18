@@ -162,20 +162,31 @@ public class PlotView extends View {
         sDataPaint.setColor(Color.GREEN);
         sLinePaint.setColor(Color.GREEN);
 
+        FixedCircularBuffer<Float> currentData = mSensorData.copy();
+
         // Draw sensor data points and lines
-        int size = mSensorData.getSize();
+        int size = currentData.getSize();
         for (int i = 0; i < size; i++) {
             float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
 
             float cx = bounds.l + i*xInterval;
-            float cy = bounds.b - (mSensorData.get(i) * unitHeight);
+            float cy = bounds.b - (currentData.get(i) * unitHeight);
             canvas.drawCircle(cx, cy, POINT_RADIUS, sDataPaint);
 
             if (i != size-1) {
                 float cx2 = bounds.l + (i+1)*xInterval;
-                float cy2 = bounds.b - (mSensorData.get(i+1) * unitHeight);
+                float cy2 = bounds.b - (currentData.get(i+1) * unitHeight);
                 canvas.drawLine(cx, cy, cx2, cy2, sLinePaint);
             }
+        }
+
+        Float max = currentData.getMax();
+        if (max != null) {
+            float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
+            float cx = (bounds.l + bounds.r)/2;
+            float cy = bounds.b - (max*unitHeight);
+            sDataPaint.setColor(Color.RED);
+            canvas.drawCircle(cx, cy, POINT_RADIUS, sDataPaint);
         }
     }
 }

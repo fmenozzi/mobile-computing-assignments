@@ -2,7 +2,7 @@ package com.example.menozzi.hw2;
 
 import android.support.annotation.NonNull;
 
-public class FixedCircularBuffer<T> {
+public class FixedCircularBuffer<T extends Comparable<T>> {
     private T[] buf;
 
     private int front;
@@ -13,7 +13,7 @@ public class FixedCircularBuffer<T> {
 
     @SuppressWarnings("unchecked")
     public FixedCircularBuffer(int capacity) {
-        buf = (T[]) new Object[capacity];
+        buf = (T[]) new Comparable[capacity];
 
         this.capacity = capacity;
     }
@@ -43,6 +43,29 @@ public class FixedCircularBuffer<T> {
 
     public synchronized boolean isFull() {
         return size == capacity;
+    }
+
+    public synchronized T getMax() {
+        if (isEmpty()) {
+            return null;
+        }
+        T max = get(0);
+        for (int i = 1; i < getSize(); i++) {
+            T elem = get(i);
+            if (elem.compareTo(max) > 0) {
+                max = elem;
+            }
+        }
+        return max;
+    }
+
+    public synchronized FixedCircularBuffer<T> copy() {
+        FixedCircularBuffer<T> newbuf = new FixedCircularBuffer<>(capacity);
+        System.arraycopy(buf, 0, newbuf.buf, 0, capacity);
+        newbuf.front = front;
+        newbuf.rear = rear;
+        newbuf.size = size;
+        return newbuf;
     }
 
     public synchronized String toString() {
