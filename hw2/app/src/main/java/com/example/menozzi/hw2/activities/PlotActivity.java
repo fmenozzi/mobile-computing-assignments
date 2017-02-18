@@ -114,27 +114,29 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
         mSensorManager.unregisterListener(this);
 
-        switch (event.sensor.getType()) {
-            case Sensor.TYPE_LIGHT:
-                float lux = event.values[0];
+        synchronized (mSensorData) {
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_LIGHT:
+                    float lux = event.values[0];
 
-                mSensorData.add(lux);
+                    mSensorData.add(lux);
 
-                break;
-            case Sensor.TYPE_ACCELEROMETER:
-                float ax = event.values[0];
-                float ay = event.values[1];
-                float az = event.values[2];
+                    break;
+                case Sensor.TYPE_ACCELEROMETER:
+                    float ax = event.values[0];
+                    float ay = event.values[1];
+                    float az = event.values[2];
 
-                float a = (float)Math.sqrt(ax*ax + ay*ay + az*az);
+                    float a = (float)Math.sqrt(ax*ax + ay*ay + az*az);
 
-                mSensorData.add(a);
+                    mSensorData.add(a);
 
-                break;
-        }
+                    break;
+            }
 
-        if (mSensorData.isFull()) {
-            X_AXIS.shiftLeft();
+            if (mSensorData.isFull()) {
+                X_AXIS.shiftLeft();
+            }
         }
 
         mPlotView.invalidate();
