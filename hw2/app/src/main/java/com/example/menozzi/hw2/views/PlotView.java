@@ -13,13 +13,13 @@ import com.example.menozzi.hw2.FixedCircularBuffer;
 
 public class PlotView extends View {
 
-    private class LTRB {
+    private static class LTRB {
         int l, t, r, b;
+        LTRB() {
+            this(0,0,0,0);
+        }
         LTRB(int l, int t, int r, int b) {
-            this.l = l;
-            this.t = t;
-            this.r = r;
-            this.b = b;
+            set(l,t,r,b);
         }
         int width() {
             return r-l;
@@ -27,7 +27,17 @@ public class PlotView extends View {
         int height() {
             return b-t;
         }
+        void set(int l, int t, int r, int b) {
+            this.l = l;
+            this.t = t;
+            this.r = r;
+            this.b = b;
+        }
     }
+
+    static final int STROKE_WIDTH = 4;
+    static final int MARGIN = STROKE_WIDTH/2;
+    static final LTRB BOUNDS = new LTRB();
 
     Axis mXAxis;
     Axis mYAxis;
@@ -46,6 +56,7 @@ public class PlotView extends View {
         sGridPaint.setColor(Color.GRAY);
         sGridPaint.setAntiAlias(true);
         sGridPaint.setStyle(Paint.Style.STROKE);
+        sGridPaint.setStrokeWidth(STROKE_WIDTH);
 
         sTickPaint.setColor(Color.GRAY);
         sTickPaint.setAntiAlias(true);
@@ -87,42 +98,41 @@ public class PlotView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        drawGrid(canvas);
-    }
-
-    public void drawGrid(Canvas canvas) {
-        int strokeWidth = 4;
-
-        sGridPaint.setStrokeWidth(strokeWidth);
-
         int w = canvas.getWidth();
         int h = canvas.getHeight();
 
-        int margin = strokeWidth/2;
+        BOUNDS.set(MARGIN+250, MARGIN+250, w-MARGIN-50, h-MARGIN-300);
 
-        LTRB bounds = new LTRB(margin+250, margin+250, w-margin-50, h-margin-300);
+        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (BOUNDS.width()+MARGIN));
+        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (BOUNDS.height()+MARGIN));
 
+        drawGrid(canvas, BOUNDS, xInterval, yInterval);
+        drawAxes(canvas, BOUNDS, xInterval, yInterval);
+        drawData(canvas, BOUNDS, xInterval, yInterval);
+    }
+
+    public void drawGrid(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
         // Draw outer grid borders
         canvas.drawRect(bounds.l, bounds.t, bounds.r, bounds.b, sGridPaint);
 
         // Draw interior x-axis lines
-        int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (bounds.width()+margin));
         for (int i = 1; i <= mXAxis.getNumTicks(); i++) {
             int x = i*xInterval + bounds.l;
             canvas.drawLine(x, bounds.t, x, bounds.b, sGridPaint);
         }
 
         // Draw interior y-axis lines
-        int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (bounds.height()+margin));
         for (int i = 1; i <= mYAxis.getNumTicks(); i++) {
             int y = i*yInterval + bounds.t;
             canvas.drawLine(bounds.l, y, bounds.r, y, sGridPaint);
         }
+    }
 
-        sTickPaint.setTextAlign(Paint.Align.CENTER);
-
+    public void drawAxes(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
         int leftAfterPadding = bounds.l - 50;
         int bottomAfterPadding = bounds.b + 60;
+
+        sTickPaint.setTextAlign(Paint.Align.CENTER);
 
         // Draw x-axis tick values
         canvas.drawText(String.valueOf(mXAxis.min), bounds.l, bottomAfterPadding, sTickPaint);
@@ -158,11 +168,13 @@ public class PlotView extends View {
         canvas.rotate(-90, yx, yy);
         canvas.drawText(mYAxis.label, yx, yy, sTextPaint);
         canvas.restore();
+    }
+
+    public void drawData(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
+        FixedCircularBuffer<Float> currentData = mSensorData.copy();
 
         sDataPaint.setColor(Color.GREEN);
         sLinePaint.setColor(Color.GREEN);
-
-        FixedCircularBuffer<Float> currentData = mSensorData.copy();
 
         // Draw sensor data points and lines
         int size = currentData.getSize();
