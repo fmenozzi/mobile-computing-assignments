@@ -49,8 +49,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                             ACCEL_AXIS_LABEL);
 
     static final double X_AXIS_MIN = 0.0;
-    static final double X_AXIS_MAX = 6.0;
-    static final double X_AXIS_RESOLUTION = 1.0;
+    static final double X_AXIS_MAX = 3.0;
+    static final double X_AXIS_RESOLUTION = 0.5;
     static final String X_AXIS_LABEL = "Elapsed Time (s)";
     static final Axis X_AXIS = new Axis(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
 
