@@ -58,6 +58,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
     static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
+    static final int SENSOR_DATA_PERIOD_MS= 500;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,7 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                 public void run() {
                     mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
                 }
-            }, 0, 500);
+            }, 0, SENSOR_DATA_PERIOD_MS);
         }
     }
 
