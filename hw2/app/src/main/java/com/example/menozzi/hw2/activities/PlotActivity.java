@@ -145,10 +145,11 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                 dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
                 Y_AXIS.max = dataMax;
             }
+
+            mTextView.setText(mSensorData.toString());
         }
 
         mPlotView.invalidate();
-        mTextView.setText(mSensorData.toString());
     }
 
     @Override
