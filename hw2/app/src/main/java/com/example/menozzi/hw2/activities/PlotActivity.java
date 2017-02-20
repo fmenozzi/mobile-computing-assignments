@@ -139,6 +139,12 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
             if (mSensorData.isFull()) {
                 X_AXIS.shiftLeft();
             }
+
+            Float dataMax = mSensorData.getMax();
+            if (dataMax > Y_AXIS.max) {
+                dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
+                Y_AXIS.max = dataMax;
+            }
         }
 
         mPlotView.invalidate();
