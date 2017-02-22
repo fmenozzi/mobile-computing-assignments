@@ -17,6 +17,7 @@ import com.example.menozzi.hw2.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlotActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -29,6 +30,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     Sensor mSensor;
 
     Timer mTimer = new Timer();
+
+    AtomicInteger mCurrentSensorValue = new AtomicInteger();
 
     static final double LIGHT_AXIS_MIN = 0.0;
     static final double LIGHT_AXIS_MAX = 50.0;
@@ -89,10 +92,33 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
             String msg = "No " + sensorName.toLowerCase() + " sensor detected";
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {
+            mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
+
             mTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
+                    PlotActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSensorData.add(Float.intBitsToFloat(mCurrentSensorValue.get()));
+
+                            synchronized (mSensorData) {
+                                if (mSensorData.isFull()) {
+                                    X_AXIS.shiftLeft();
+                                }
+
+                                Float dataMax = mSensorData.getMax();
+                                if (dataMax != null && dataMax > Y_AXIS.max) {
+                                    dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
+                                    Y_AXIS.max = dataMax;
+                                }
+
+                                mTextView.setText(mSensorData.toString());
+                            }
+
+                            mPlotView.invalidate();
+                        }
+                    });
                 }
             }, 0, SENSOR_DATA_PERIOD_MS);
         }
@@ -114,42 +140,20 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        mSensorManager.unregisterListener(this);
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_LIGHT:
+                mCurrentSensorValue.set(Float.floatToIntBits(event.values[0]));
+                break;
 
-        synchronized (mSensorData) {
-            switch (event.sensor.getType()) {
-                case Sensor.TYPE_LIGHT:
-                    float lux = event.values[0];
+            case Sensor.TYPE_ACCELEROMETER:
+                float ax = event.values[0];
+                float ay = event.values[1];
+                float az = event.values[2];
 
-                    mSensorData.add(lux);
-
-                    break;
-                case Sensor.TYPE_ACCELEROMETER:
-                    float ax = event.values[0];
-                    float ay = event.values[1];
-                    float az = event.values[2];
-
-                    float a = (float)Math.sqrt(ax*ax + ay*ay + az*az);
-
-                    mSensorData.add(a);
-
-                    break;
-            }
-
-            if (mSensorData.isFull()) {
-                X_AXIS.shiftLeft();
-            }
-
-            Float dataMax = mSensorData.getMax();
-            if (dataMax > Y_AXIS.max) {
-                dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
-                Y_AXIS.max = dataMax;
-            }
-
-            mTextView.setText(mSensorData.toString());
+                float a = (float)Math.sqrt(ax*ax + ay*ay + az*az);
+                mCurrentSensorValue.set(Float.floatToIntBits(a));
+                break;
         }
-
-        mPlotView.invalidate();
     }
 
     @Override
