@@ -85,6 +85,9 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mPlotView.setSensorDataBuffer(mSensorData);
         mPlotView.invalidate();
 
+        mSensorAnimationView = (SensorAnimationView) findViewById(R.id.sensor_animation_view);
+        mSensorAnimationView.setMaxValue(100);
+
         if (mSensor == null) {
             String msg = "No " + sensorName.toLowerCase() + " sensor detected";
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -97,7 +100,10 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                     PlotActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mSensorData.add(Float.intBitsToFloat(mCurrentSensorValue.get()));
+                            float sensorValue = Float.intBitsToFloat(mCurrentSensorValue.get());
+
+                            mSensorData.add(sensorValue);
+                            mSensorAnimationView.setValue(sensorValue);
 
                             synchronized (mSensorData) {
                                 if (mSensorData.isFull()) {

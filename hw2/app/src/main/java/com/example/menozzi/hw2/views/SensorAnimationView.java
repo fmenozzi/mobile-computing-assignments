@@ -10,11 +10,14 @@ import android.view.View;
 
 public class SensorAnimationView extends View {
 
+    float mSensorValue;
+    float mMaxSensorValue;
+
     static Paint sBulbPaint = new Paint();
     static Paint sStemPaint = new Paint();
 
     static {
-        sBulbPaint.setColor(Color.YELLOW);
+        sBulbPaint.setColor(Color.rgb(0,0,0));
         sBulbPaint.setAntiAlias(true);
 
         sStemPaint.setColor(Color.BLACK);
@@ -41,17 +44,27 @@ public class SensorAnimationView extends View {
         super(context, attrs, defStyleAttr);
     }
 
+    public void setValue(float value) {
+        mSensorValue = value;
+        invalidate();
+    }
+
+    public void setMaxValue(float maxValue) {
+        mMaxSensorValue = maxValue;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int w = canvas.getWidth();
-        int h = canvas.getHeight();
-
-        final int BULB_CENTER_X = w/2;
+        final int BULB_CENTER_X = canvas.getWidth()/2;
         final int BULB_CENTER_Y = BULB_RADIUS;
 
         final int BULB_LINE_OFFSET = 10;
+
+        // Set color based on sensor value
+        int y = (int)Math.min((mSensorValue/mMaxSensorValue) * 255, 255);
+        sBulbPaint.setColor(Color.rgb(y, y, 0));
 
         // Draw bulb
         canvas.drawCircle(BULB_CENTER_X, BULB_CENTER_Y, BULB_RADIUS, sBulbPaint);
