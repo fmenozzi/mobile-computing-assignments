@@ -7,11 +7,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.menozzi.hw2.Axis;
 import com.example.menozzi.hw2.FixedCircularBuffer;
+import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PlotActivity extends AppCompatActivity implements SensorEventListener {
 
     PlotView mPlotView;
-    TextView mTextView;
+    SensorAnimationView mSensorAnimationView;
 
     FixedCircularBuffer<Float> mSensorData;
 
@@ -85,9 +85,6 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mPlotView.setSensorDataBuffer(mSensorData);
         mPlotView.invalidate();
 
-        mTextView = (TextView) findViewById(R.id.textview);
-        mTextView.setText(getIntent().getData().toString());
-
         if (mSensor == null) {
             String msg = "No " + sensorName.toLowerCase() + " sensor detected";
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
@@ -112,8 +109,6 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                     dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
                                     Y_AXIS.max = dataMax;
                                 }
-
-                                mTextView.setText(mSensorData.toString());
                             }
 
                             mPlotView.invalidate();
