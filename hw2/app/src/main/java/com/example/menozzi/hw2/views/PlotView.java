@@ -235,14 +235,5 @@ public class PlotView extends View {
                 }
             }
         }
-
-        Float max = Math.max(buffers[0].getMax(), Math.max(buffers[1].getMax(), buffers[2].getMax()));
-        if (max != null) {
-            float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
-            float cx = (bounds.l + bounds.r)/2;
-            float cy = bounds.b - (max*unitHeight);
-            sDataPaint.setColor(Color.RED);
-            canvas.drawCircle(cx, cy, POINT_RADIUS, sDataPaint);
-        }
     }
 }
