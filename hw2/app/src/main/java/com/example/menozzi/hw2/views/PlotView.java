@@ -209,11 +209,11 @@ public class PlotView extends View {
 
     public void drawData(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
         FixedCircularFloatBuffer[] buffers = new FixedCircularFloatBuffer[] {
-                mSensorData.copy(), mRunningMeans.copy(), mRunningStdDevs.copy(),
+                mRunningStdDevs.copy(), mRunningMeans.copy(), mSensorData.copy(),
         };
 
         int [] colors = new int[] {
-                Color.GREEN, Color.BLUE, Color.MAGENTA,
+                Color.MAGENTA, Color.BLUE, Color.GREEN,
         };
 
         for (int i = 0; i < buffers.length; i++) {
