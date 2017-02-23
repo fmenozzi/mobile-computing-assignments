@@ -15,6 +15,7 @@ import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,11 +26,15 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     SensorAnimationView mSensorAnimationView;
 
     FixedCircularFloatBuffer mSensorData;
+    FixedCircularFloatBuffer mRunningMeans;
+    FixedCircularFloatBuffer mRunningStdDevs;
 
     SensorManager mSensorManager;
     Sensor mSensor;
 
     Timer mTimer = new Timer();
+
+    Random rnd = new Random();
 
     AtomicInteger mCurrentSensorValue = new AtomicInteger();
 
@@ -74,7 +79,10 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
 
-        mSensorData = new FixedCircularFloatBuffer(X_AXIS.getNumTicks() + 2);
+        int bufsize = X_AXIS.getNumTicks() + 2;
+        mSensorData = new FixedCircularFloatBuffer(bufsize);
+        mRunningMeans = new FixedCircularFloatBuffer(bufsize);
+        mRunningStdDevs = new FixedCircularFloatBuffer(bufsize);
 
         X_AXIS.reset(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
         Y_AXIS.reset((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
@@ -83,6 +91,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mPlotView.setXAxis(X_AXIS);
         mPlotView.setYAxis(Y_AXIS);
         mPlotView.setSensorDataBuffer(mSensorData);
+        mPlotView.setRunningMeanBuffer(mRunningMeans);
+        mPlotView.setRunningStdDevBuffer(mRunningStdDevs);
         mPlotView.invalidate();
 
         mSensorAnimationView = (SensorAnimationView) findViewById(R.id.sensor_animation_view);
@@ -102,10 +112,13 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                         public void run() {
                             float sensorValue = Float.intBitsToFloat(mCurrentSensorValue.get());
 
-                            mSensorData.add(sensorValue);
-                            mSensorAnimationView.setValue(sensorValue);
-
                             synchronized (mSensorData) {
+                                mSensorData.add(sensorValue);
+                                mSensorAnimationView.setValue(sensorValue);
+
+                                mRunningMeans.add(mSensorData.getMean());
+                                mRunningStdDevs.add(mSensorData.getStdDev());
+
                                 if (mSensorData.isFull()) {
                                     X_AXIS.shiftLeft();
                                 }

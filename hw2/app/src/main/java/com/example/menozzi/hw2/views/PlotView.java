@@ -43,6 +43,8 @@ public class PlotView extends View {
     Axis mYAxis;
 
     FixedCircularFloatBuffer mSensorData;
+    FixedCircularFloatBuffer mRunningMeans;
+    FixedCircularFloatBuffer mRunningStdDevs;
 
     static final int POINT_RADIUS = 15;
 
@@ -92,6 +94,12 @@ public class PlotView extends View {
 
     public void setSensorDataBuffer(FixedCircularFloatBuffer buffer) {
         mSensorData = buffer;
+    }
+    public void setRunningMeanBuffer(FixedCircularFloatBuffer buffer) {
+        mRunningMeans = buffer;
+    }
+    public void setRunningStdDevBuffer(FixedCircularFloatBuffer buffer) {
+        mRunningStdDevs = buffer;
     }
 
     @Override
@@ -171,28 +179,35 @@ public class PlotView extends View {
     }
 
     public void drawData(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
-        FixedCircularFloatBuffer currentData = mSensorData.copy();
+        FixedCircularFloatBuffer[] buffers = new FixedCircularFloatBuffer[] {
+                mSensorData.copy(), mRunningMeans.copy(), mRunningStdDevs.copy(),
+        };
 
-        sDataPaint.setColor(Color.GREEN);
-        sLinePaint.setColor(Color.GREEN);
+        int [] colors = new int[] {
+                Color.GREEN, Color.BLUE, Color.MAGENTA,
+        };
 
-        // Draw sensor data points and lines
-        int size = currentData.getSize();
-        for (int i = 0; i < size; i++) {
-            float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
+        for (int i = 0; i < buffers.length; i++) {
+            sDataPaint.setColor(colors[i]);
+            sLinePaint.setColor(colors[i]);
 
-            float cx = bounds.l + i*xInterval;
-            float cy = bounds.b - (currentData.get(i) * unitHeight);
-            canvas.drawCircle(cx, cy, POINT_RADIUS, sDataPaint);
+            int size = buffers[i].getSize();
+            for (int j = 0; j < size; j++) {
+                float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
 
-            if (i != size-1) {
-                float cx2 = bounds.l + (i+1)*xInterval;
-                float cy2 = bounds.b - (currentData.get(i+1) * unitHeight);
-                canvas.drawLine(cx, cy, cx2, cy2, sLinePaint);
+                float cx = bounds.l + j*xInterval;
+                float cy = bounds.b - (buffers[i].get(j) * unitHeight);
+                canvas.drawCircle(cx, cy, POINT_RADIUS, sDataPaint);
+
+                if (j != size-1) {
+                    float cx2 = bounds.l + (j+1)*xInterval;
+                    float cy2 = bounds.b - (buffers[i].get(j+1) * unitHeight);
+                    canvas.drawLine(cx, cy, cx2, cy2, sLinePaint);
+                }
             }
         }
 
-        Float max = currentData.getMax();
+        Float max = Math.max(buffers[0].getMax(), Math.max(buffers[1].getMax(), buffers[2].getMax()));
         if (max != null) {
             float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
             float cx = (bounds.l + bounds.r)/2;
