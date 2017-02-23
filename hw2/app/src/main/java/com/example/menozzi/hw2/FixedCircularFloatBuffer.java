@@ -2,7 +2,7 @@ package com.example.menozzi.hw2;
 
 import android.support.annotation.NonNull;
 
-public class FixedCirculuarFloatBuffer {
+public class FixedCircularFloatBuffer {
     private float[] buf;
 
     private int front;
@@ -12,7 +12,7 @@ public class FixedCirculuarFloatBuffer {
     private int capacity;
 
     @SuppressWarnings("unchecked")
-    public FixedCirculuarFloatBuffer(int capacity) {
+    public FixedCircularFloatBuffer(int capacity) {
         buf = new float[capacity];
 
         this.capacity = capacity;
@@ -58,8 +58,8 @@ public class FixedCirculuarFloatBuffer {
         return max;
     }
 
-    public synchronized FixedCirculuarFloatBuffer copy() {
-        FixedCirculuarFloatBuffer newbuf = new FixedCirculuarFloatBuffer(capacity);
+    public synchronized FixedCircularFloatBuffer copy() {
+        FixedCircularFloatBuffer newbuf = new FixedCircularFloatBuffer(capacity);
         System.arraycopy(buf, 0, newbuf.buf, 0, capacity);
         newbuf.front = front;
         newbuf.rear = rear;
@@ -84,7 +84,7 @@ public class FixedCirculuarFloatBuffer {
 
     public static void main(String[] args) {
         // Quick test
-        FixedCirculuarFloatBuffer buf = new FixedCirculuarFloatBuffer(4);
+        FixedCircularFloatBuffer buf = new FixedCircularFloatBuffer(4);
         System.out.println(buf);
         for (int i = 0; i < 20; i++) {
             buf.add(i);
