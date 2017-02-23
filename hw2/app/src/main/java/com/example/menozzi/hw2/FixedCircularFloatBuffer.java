@@ -58,6 +58,18 @@ public class FixedCircularFloatBuffer {
         return max;
     }
 
+    public synchronized Float getMean() {
+        if (isEmpty()) {
+            return null;
+        }
+        int size = getSize();
+        float sum = 0.0f;
+        for (int i = 0; i < size; i++) {
+            sum += get(i);
+        }
+        return sum/size;
+    }
+
     public synchronized FixedCircularFloatBuffer copy() {
         FixedCircularFloatBuffer newbuf = new FixedCircularFloatBuffer(capacity);
         System.arraycopy(buf, 0, newbuf.buf, 0, capacity);
