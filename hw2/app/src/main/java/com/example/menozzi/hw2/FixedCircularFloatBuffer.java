@@ -70,6 +70,19 @@ public class FixedCircularFloatBuffer {
         return sum/size;
     }
 
+    public synchronized Float getStdDev() {
+        if (isEmpty()) {
+            return null;
+        }
+        float mean = getMean();
+        float size = getSize();
+        float ssd = 0.0f;
+        for (int i = 0; i < size; i++) {
+            ssd += Math.pow(get(i)-mean, 2);
+        }
+        return (float)Math.sqrt(ssd/size);
+    }
+
     public synchronized FixedCircularFloatBuffer copy() {
         FixedCircularFloatBuffer newbuf = new FixedCircularFloatBuffer(capacity);
         System.arraycopy(buf, 0, newbuf.buf, 0, capacity);
