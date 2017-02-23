@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.menozzi.hw2.Axis;
-import com.example.menozzi.hw2.FixedCircularBuffer;
+import com.example.menozzi.hw2.FixedCirculuarFloatBuffer;
 
 public class PlotView extends View {
 
@@ -42,7 +42,7 @@ public class PlotView extends View {
     Axis mXAxis;
     Axis mYAxis;
 
-    FixedCircularBuffer<Float> mSensorData;
+    FixedCirculuarFloatBuffer mSensorData;
 
     static final int POINT_RADIUS = 15;
 
@@ -90,7 +90,7 @@ public class PlotView extends View {
         mYAxis = yAxis;
     }
 
-    public void setSensorDataBuffer(FixedCircularBuffer<Float> buffer) {
+    public void setSensorDataBuffer(FixedCirculuarFloatBuffer buffer) {
         mSensorData = buffer;
     }
 
@@ -171,7 +171,7 @@ public class PlotView extends View {
     }
 
     public void drawData(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
-        FixedCircularBuffer<Float> currentData = mSensorData.copy();
+        FixedCirculuarFloatBuffer currentData = mSensorData.copy();
 
         sDataPaint.setColor(Color.GREEN);
         sLinePaint.setColor(Color.GREEN);

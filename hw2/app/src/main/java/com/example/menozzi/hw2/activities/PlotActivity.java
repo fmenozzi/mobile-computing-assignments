@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.menozzi.hw2.Axis;
-import com.example.menozzi.hw2.FixedCircularBuffer;
+import com.example.menozzi.hw2.FixedCirculuarFloatBuffer;
 import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
@@ -24,7 +24,7 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     PlotView mPlotView;
     SensorAnimationView mSensorAnimationView;
 
-    FixedCircularBuffer<Float> mSensorData;
+    FixedCirculuarFloatBuffer mSensorData;
 
     SensorManager mSensorManager;
     Sensor mSensor;
@@ -74,7 +74,7 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
 
-        mSensorData = new FixedCircularBuffer<>(X_AXIS.getNumTicks() + 2);
+        mSensorData = new FixedCirculuarFloatBuffer(X_AXIS.getNumTicks() + 2);
 
         X_AXIS.reset(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
         Y_AXIS.reset((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
