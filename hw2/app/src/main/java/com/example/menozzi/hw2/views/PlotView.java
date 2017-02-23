@@ -67,7 +67,6 @@ public class PlotView extends View {
         sTextPaint.setColor(Color.GRAY);
         sTextPaint.setAntiAlias(true);
         sTextPaint.setTextSize(48);
-        sTextPaint.setTextAlign(Paint.Align.CENTER);
 
         sDataPaint.setAntiAlias(true);
 
@@ -114,9 +113,37 @@ public class PlotView extends View {
         int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (BOUNDS.width()+MARGIN));
         int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (BOUNDS.height()+MARGIN));
 
+        drawLegend(canvas, BOUNDS);
         drawGrid(canvas, BOUNDS, xInterval, yInterval);
         drawAxes(canvas, BOUNDS, xInterval, yInterval);
         drawData(canvas, BOUNDS, xInterval, yInterval);
+    }
+
+    public void drawLegend(Canvas canvas, LTRB bounds) {
+        final int LINE_LEN = 100;
+        final int LINE_PAD = 50;
+
+        final int[] COLORS = new int[]{Color.GREEN, Color.BLUE, Color.MAGENTA};
+        final String[] TEXTS = new String[]{"Value", "Mean", "Std Dev"};
+
+        sTextPaint.setTextAlign(Paint.Align.LEFT);
+
+        Rect textBounds = new Rect();
+        sTextPaint.getTextBounds("M", 0, 1, textBounds);
+        int halfTextSize = textBounds.height()/2;
+
+        int x = 350;
+        int y = 50;
+        for (int i = 0; i < TEXTS.length; i++) {
+            sLinePaint.setColor(COLORS[i]);
+            sDataPaint.setColor(COLORS[i]);
+
+            canvas.drawLine(x, y, x+LINE_LEN, y, sLinePaint);
+            canvas.drawCircle(x + LINE_LEN/2, y, POINT_RADIUS, sDataPaint);
+            canvas.drawText(TEXTS[i], x + LINE_LEN + 50, y + halfTextSize, sTextPaint);
+
+            y += LINE_PAD;
+        }
     }
 
     public void drawGrid(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
@@ -165,6 +192,8 @@ public class PlotView extends View {
             canvas.drawText(tickValue, leftAfterPadding, y, sTickPaint);
         }
         canvas.drawText(String.valueOf(mYAxis.max), leftAfterPadding, bounds.t + halfTextSize, sTickPaint);
+
+        sTextPaint.setTextAlign(Paint.Align.CENTER);
 
         // Draw x-axis label
         canvas.drawText(mXAxis.label, (bounds.r+bounds.l)/2, bottomAfterPadding + 100, sTextPaint);
