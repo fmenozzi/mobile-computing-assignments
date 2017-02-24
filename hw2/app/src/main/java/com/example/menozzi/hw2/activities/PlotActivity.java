@@ -57,16 +57,16 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                             ACCEL_AXIS_LABEL);
 
     static final double X_AXIS_MIN = 0.0;
-    static final double X_AXIS_MAX = 5.0;
-    static final double X_AXIS_RESOLUTION = 1.0;
-    static final String X_AXIS_LABEL = "Elapsed Time (x100 ms)";
+    static final double X_AXIS_MAX = 3.0;
+    static final double X_AXIS_RESOLUTION = 0.5;
+    static final String X_AXIS_LABEL = "Elapsed Time (s)";
     static final Axis X_AXIS = new Axis(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
 
     static final Axis Y_AXIS = new Axis(0,0,0,null);
 
     static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
-    static final int SENSOR_DATA_PERIOD_MS = 100;
+    static final int SENSOR_DATA_PERIOD_MS = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
