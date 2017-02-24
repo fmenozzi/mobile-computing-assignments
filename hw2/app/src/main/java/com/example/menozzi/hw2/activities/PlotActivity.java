@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.menozzi.hw2.Axis;
 import com.example.menozzi.hw2.FixedCircularFloatBuffer;
+import com.example.menozzi.hw2.drawers.AccelerometerAnimationViewDrawer;
+import com.example.menozzi.hw2.drawers.LightSensorAnimationViewDrawer;
 import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
@@ -65,6 +67,9 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
     static final int SENSOR_DATA_PERIOD_MS = 100;
 
+    static final float LIGHT_MAX_VALUE = 100.0f;
+    static final float ACCEL_MAX_VALUE = 10.0f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +98,13 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         mPlotView.invalidate();
 
         mSensorAnimationView = (SensorAnimationView) findViewById(R.id.sensor_animation_view);
-        mSensorAnimationView.setMaxValue(100);
+        if (sensorType == Sensor.TYPE_LIGHT) {
+            mSensorAnimationView.setMaxValue(LIGHT_MAX_VALUE);
+            mSensorAnimationView.setAnimationViewDrawer(new LightSensorAnimationViewDrawer());
+        } else {
+            mSensorAnimationView.setMaxValue(ACCEL_MAX_VALUE);
+            mSensorAnimationView.setAnimationViewDrawer(new AccelerometerAnimationViewDrawer());
+        }
 
         if (mSensor == null) {
             String msg = "No " + sensorName.toLowerCase() + " sensor detected";
