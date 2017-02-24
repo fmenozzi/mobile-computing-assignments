@@ -1,4 +1,4 @@
-package com.example.menozzi.hw2;
+package com.example.menozzi.hw2.util;
 
 import android.support.annotation.NonNull;
 

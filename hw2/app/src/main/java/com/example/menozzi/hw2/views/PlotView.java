@@ -8,8 +8,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.menozzi.hw2.Axis;
-import com.example.menozzi.hw2.FixedCircularFloatBuffer;
+import com.example.menozzi.hw2.util.Axis;
+import com.example.menozzi.hw2.util.FixedCircularFloatBuffer;
 
 public class PlotView extends View {
 

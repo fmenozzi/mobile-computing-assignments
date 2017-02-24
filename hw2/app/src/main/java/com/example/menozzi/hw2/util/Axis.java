@@ -1,4 +1,4 @@
-package com.example.menozzi.hw2;
+package com.example.menozzi.hw2.util;
 
 public class Axis {
     public double min = 0.0;

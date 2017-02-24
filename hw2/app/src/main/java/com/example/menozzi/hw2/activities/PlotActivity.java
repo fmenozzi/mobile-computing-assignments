@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.example.menozzi.hw2.Axis;
-import com.example.menozzi.hw2.FixedCircularFloatBuffer;
+import com.example.menozzi.hw2.util.Axis;
+import com.example.menozzi.hw2.util.FixedCircularFloatBuffer;
 import com.example.menozzi.hw2.drawers.AccelerometerAnimationViewDrawer;
 import com.example.menozzi.hw2.drawers.LightSensorAnimationViewDrawer;
 import com.example.menozzi.hw2.views.SensorAnimationView;
