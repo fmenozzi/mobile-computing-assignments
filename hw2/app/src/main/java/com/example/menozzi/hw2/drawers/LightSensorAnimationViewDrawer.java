@@ -13,7 +13,7 @@ public class LightSensorAnimationViewDrawer implements SensorAnimationViewDrawer
     static Paint sStemPaint = new Paint();
 
     static {
-        sBulbPaint.setColor(Color.rgb(0,0,0));
+        sBulbPaint.setColor(Color.BLACK);
         sBulbPaint.setAntiAlias(true);
 
         sStemPaint.setColor(Color.BLACK);
