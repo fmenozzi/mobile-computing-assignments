@@ -39,8 +39,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     AtomicInteger mCurrentSensorValue = new AtomicInteger();
 
     static final double LIGHT_AXIS_MIN = 0.0;
-    static final double LIGHT_AXIS_MAX = 50.0;
-    static final double LIGHT_AXIS_RESOLUTION = 10.0;
+    static final double LIGHT_AXIS_MAX = 100.0;
+    static final double LIGHT_AXIS_RESOLUTION = 20.0;
     static final String LIGHT_AXIS_LABEL = "Luminance (lx)";
     static final Axis LIGHT_AXIS = new Axis(LIGHT_AXIS_MIN,
                                             LIGHT_AXIS_MAX,
