@@ -6,11 +6,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 public class LightSensorAnimationViewDrawer implements SensorAnimationViewDrawer {
-    float mSensorValue;
-    float mMaxSensorValue;
+    private float mSensorValue;
+    private float mMaxSensorValue;
 
-    static Paint sBulbPaint = new Paint();
-    static Paint sStemPaint = new Paint();
+    private static Paint sBulbPaint = new Paint();
+    private static Paint sStemPaint = new Paint();
 
     static {
         sBulbPaint.setColor(Color.BLACK);
@@ -20,23 +20,23 @@ public class LightSensorAnimationViewDrawer implements SensorAnimationViewDrawer
         sStemPaint.setAntiAlias(true);
     }
 
-    static Path sBulbPath = new Path();
-    static Path sStemPath = new Path();
+    private static Path sBulbPath = new Path();
+    private static Path sStemPath = new Path();
 
-    static final int BULB_RADIUS = 90;
+    private static final int BULB_RADIUS = 90;
+    private static final int BULB_LINE_OFFSET = 10;
 
-    static final int STEM_OFFSET = 5;
-    static final int STEM_RECT_HEIGHT = 10;
-    static final int STEM_PADDING = 5;
-    static final int STEM_NUM_BANDS = 3;
+    private static final int STEM_OFFSET = 5;
+    private static final int STEM_RECT_HEIGHT = 10;
+    private static final int STEM_PADDING = 5;
+    private static final int STEM_NUM_BANDS = 3;
 
     public void onDraw(Canvas canvas, float sensorValue, float maxSensorValue) {
-        final int BULB_CENTER_X = canvas.getWidth()/2;
-        final int BULB_CENTER_Y = BULB_RADIUS;
-        final int BULB_LINE_OFFSET = 10;
-
         mSensorValue = sensorValue;
         mMaxSensorValue = maxSensorValue;
+
+        final int BULB_CENTER_X = canvas.getWidth()/2;
+        final int BULB_CENTER_Y = BULB_RADIUS;
 
         drawBulb(canvas, BULB_CENTER_X, BULB_CENTER_Y, BULB_LINE_OFFSET);
         drawStem(canvas, BULB_CENTER_X, BULB_CENTER_Y, BULB_LINE_OFFSET);
