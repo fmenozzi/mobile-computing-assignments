@@ -48,8 +48,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                             LIGHT_AXIS_LABEL);
 
     static final double ACCEL_AXIS_MIN = 0.0;
-    static final double ACCEL_AXIS_MAX = 12.0;
-    static final double ACCEL_AXIS_RESOLUTION = 2.0;
+    static final double ACCEL_AXIS_MAX = 15.0;
+    static final double ACCEL_AXIS_RESOLUTION = 5.0;
     static final String ACCEL_AXIS_LABEL = "Acceleration (m/s^2)";
     static final Axis ACCEL_AXIS = new Axis(ACCEL_AXIS_MIN,
                                             ACCEL_AXIS_MAX,
