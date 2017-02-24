@@ -15,7 +15,6 @@ import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
 
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,8 +32,6 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     Sensor mSensor;
 
     Timer mTimer = new Timer();
-
-    Random rnd = new Random();
 
     AtomicInteger mCurrentSensorValue = new AtomicInteger();
 
@@ -57,16 +54,16 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                             ACCEL_AXIS_LABEL);
 
     static final double X_AXIS_MIN = 0.0;
-    static final double X_AXIS_MAX = 3.0;
-    static final double X_AXIS_RESOLUTION = 0.5;
-    static final String X_AXIS_LABEL = "Elapsed Time (s)";
+    static final double X_AXIS_MAX = 5.0;
+    static final double X_AXIS_RESOLUTION = 1.0;
+    static final String X_AXIS_LABEL = "Elapsed Time (x100 ms)";
     static final Axis X_AXIS = new Axis(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
 
     static final Axis Y_AXIS = new Axis(0,0,0,null);
 
     static final int SENSOR_SAMPLING_RATE = SensorManager.SENSOR_DELAY_NORMAL;
 
-    static final int SENSOR_DATA_PERIOD_MS = 500;
+    static final int SENSOR_DATA_PERIOD_MS = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
