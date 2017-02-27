@@ -96,21 +96,27 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
     }
 
     private void drawLines(Canvas canvas, int phoneCenterX, int phoneCenterY) {
-        final int LINES_MARGIN_X = 50;
-        final int LINES_MARGIN_Y = 50;
+        final int LINE_PHONE_MARGIN_X = 50;
+        final int LINE_PHONE_MARGIN_Y = 50;
 
-        int x0 = BOUNDS.l - LINES_MARGIN_X;
-        int x1 = BOUNDS.r + LINES_MARGIN_X;
+        int x0 = BOUNDS.l - LINE_PHONE_MARGIN_X;
+        int x1 = BOUNDS.r + LINE_PHONE_MARGIN_X;
 
-        int y0 = BOUNDS.t + LINES_MARGIN_Y;
-        int y1 = BOUNDS.b - LINES_MARGIN_Y;
+        int y0 = BOUNDS.t + LINE_PHONE_MARGIN_Y;
+        int y1 = BOUNDS.b - LINE_PHONE_MARGIN_Y;
 
         final int ZIG_ZAG_DISPLACEMENT = 20;
-
         final int NUM_ZIG_ZAGS = 6;
+        final int NUM_LINES_ON_EACH_SIDE = 3;
+        final int LINE_LINE_MARGIN = 30;
 
-        drawZigZag(canvas, x0, y0, x0, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, true);
-        drawZigZag(canvas, x1, y0, x1, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, false);
+        for (int i = 0; i < NUM_LINES_ON_EACH_SIDE; i++) {
+            int leftX = x0 - i*LINE_LINE_MARGIN;
+            drawZigZag(canvas, leftX, y0, leftX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, true);
+
+            int rightX = x1 + i*LINE_LINE_MARGIN;
+            drawZigZag(canvas, rightX, y0, rightX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, false);
+        }
     }
 
     private void drawZigZag(Canvas canvas,
