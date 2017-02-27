@@ -5,12 +5,15 @@ import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.hardware.SensorManager;
 
 import com.example.menozzi.hw2.util.LTRB;
 
 public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDrawer {
     private float mSensorValue;
     private float mMaxSensorValue;
+
+    private static final float[] THRESHOLDS = new float[]{1.5f, 5.0f, 8.0f};
 
     private static Paint sPhonePaint  = new Paint();
     private static Paint sScreenPaint = new Paint();
@@ -107,10 +110,11 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
 
         final int ZIG_ZAG_DISPLACEMENT = 20;
         final int NUM_ZIG_ZAGS = 6;
-        final int NUM_LINES_ON_EACH_SIDE = 3;
         final int LINE_LINE_MARGIN = 30;
 
-        for (int i = 0; i < NUM_LINES_ON_EACH_SIDE; i++) {
+        int numLinesOnEachSide = determineNumLines();
+
+        for (int i = 0; i < numLinesOnEachSide; i++) {
             int leftX = x0 - i*LINE_LINE_MARGIN;
             drawZigZag(canvas, leftX, y0, leftX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, true);
 
@@ -138,5 +142,15 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
         sLinesPath.lineTo(x1, y1);
 
         canvas.drawPath(sLinesPath, sLinesPaint);
+    }
+
+    private int determineNumLines() {
+        float diff = Math.abs(mSensorValue - SensorManager.GRAVITY_EARTH);
+        for (int i = 0; i < THRESHOLDS.length; i++) {
+            if (diff < THRESHOLDS[i]) {
+                return i;
+            }
+        }
+        return THRESHOLDS.length;
     }
 }
