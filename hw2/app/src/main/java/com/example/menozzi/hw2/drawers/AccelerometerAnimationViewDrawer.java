@@ -15,10 +15,10 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
     private static Paint sPhonePaint  = new Paint();
     private static Paint sScreenPaint = new Paint();
     private static Paint sButtonPaint = new Paint();
-
     private static Paint sLinesPaint  = new Paint();
 
     private static Path sPhonePath = new Path();
+    private static Path sLinesPath = new Path();
 
     private static final LTRB BOUNDS = new LTRB();
 
@@ -28,12 +28,14 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
     private static final int PHONE_WIDTH = 200;
     private static final int PHONE_HEIGHT = 350;
 
+    private static final int HOME_BUTTON_RADIUS = 15;
+
     private static final int SCREEN_OFFSET_L = 20;
     private static final int SCREEN_OFFSET_R = 20;
     private static final int SCREEN_OFFSET_T = 40;
     private static final int SCREEN_OFFSET_B = 60;
 
-    private static final int HOME_BUTTON_RADIUS = 15;
+    private static final int LINES_STROKE_WIDTH = 10;
 
     static {
         sPhonePaint.setColor(Color.BLACK);
@@ -51,6 +53,9 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
 
         sLinesPaint.setColor(Color.BLACK);
         sLinesPaint.setAntiAlias(true);
+        sLinesPaint.setStyle(Paint.Style.STROKE);
+        sLinesPaint.setStrokeWidth(LINES_STROKE_WIDTH);
+        sLinesPaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     public void onDraw(Canvas canvas, float sensorValue, float maxSensorValue) {
@@ -91,6 +96,41 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
     }
 
     private void drawLines(Canvas canvas, int phoneCenterX, int phoneCenterY) {
+        final int LINES_MARGIN_X = 50;
+        final int LINES_MARGIN_Y = 50;
 
+        int x0 = BOUNDS.l - LINES_MARGIN_X;
+        int x1 = BOUNDS.r + LINES_MARGIN_X;
+
+        int y0 = BOUNDS.t + LINES_MARGIN_Y;
+        int y1 = BOUNDS.b - LINES_MARGIN_Y;
+
+        final int ZIG_ZAG_DISPLACEMENT = 20;
+
+        final int NUM_ZIG_ZAGS = 6;
+
+        drawZigZag(canvas, x0, y0, x0, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, true);
+        drawZigZag(canvas, x1, y0, x1, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, false);
+    }
+
+    private void drawZigZag(Canvas canvas,
+                            int x0, int y0,
+                            int x1, int y1,
+                            int numZigZags,
+                            int zigZagDisplacement,
+                            boolean startLeft) {
+
+        int dx = startLeft ? -zigZagDisplacement : zigZagDisplacement;
+        int dy = (y1-y0) / numZigZags;
+
+        sLinesPath.reset();
+        sLinesPath.moveTo(x0, y0);
+        for (int i = 1; i < numZigZags; i++) {
+            sLinesPath.lineTo(x0 + dx, y0 + i*dy);
+            dx = -dx;
+        }
+        sLinesPath.lineTo(x1, y1);
+
+        canvas.drawPath(sLinesPath, sLinesPaint);
     }
 }
