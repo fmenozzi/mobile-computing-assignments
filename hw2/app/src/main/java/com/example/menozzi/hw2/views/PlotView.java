@@ -10,30 +10,9 @@ import android.view.View;
 
 import com.example.menozzi.hw2.util.Axis;
 import com.example.menozzi.hw2.util.FixedCircularFloatBuffer;
+import com.example.menozzi.hw2.util.LTRB;
 
 public class PlotView extends View {
-
-    private static class LTRB {
-        int l, t, r, b;
-        LTRB() {
-            this(0,0,0,0);
-        }
-        LTRB(int l, int t, int r, int b) {
-            set(l,t,r,b);
-        }
-        int width() {
-            return r-l;
-        }
-        int height() {
-            return b-t;
-        }
-        void set(int l, int t, int r, int b) {
-            this.l = l;
-            this.t = t;
-            this.r = r;
-            this.b = b;
-        }
-    }
 
     static final int STROKE_WIDTH = 4;
     static final int MARGIN = STROKE_WIDTH/2;
