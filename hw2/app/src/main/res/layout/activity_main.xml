@@ -15,70 +15,234 @@
     <LinearLayout
         android:id="@+id/row_1"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="10"
+        android:layout_marginBottom="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/light_sensor_button"
-            android:background="#ff0000"
             android:text="Light"
             android:onClick="buttonCallback"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:layout_gravity="center_horizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="100dp" />
 
-        <TextView
-            android:id="@+id/light_text_1"
-            android:text="Hello"
-            android:background="#00ff00"
-            android:layout_weight="1"
+        <LinearLayout
+            android:id="@+id/light_status_layout"
+            android:orientation="vertical"
+            android:weightSum="4"
+            android:layout_weight="6"
             android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/light_text_2"
-            android:text="World"
-            android:background="#0066ff"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Status: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/light_status_textview"
+                    android:text="Present"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Range: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/light_range_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Resolution: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/light_resolution_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Min Delay: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/light_delay_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/row_2"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/accelerometer_sensor_button"
-            android:background="#ffff00"
+            android:id="@+id/accel_sensor_button"
             android:text="Accelerometer"
             android:onClick="buttonCallback"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:layout_gravity="center_horizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="100dp" />
 
-        <TextView
-            android:id="@+id/accel_text_1"
-            android:text="Hello"
-            android:background="#00ffff"
-            android:layout_weight="1"
+        <LinearLayout
+            android:id="@+id/accel_status_layout"
+            android:orientation="vertical"
+            android:weightSum="4"
+            android:layout_weight="6"
             android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/accel_text_2"
-            android:text="World"
-            android:background="#ff00ff"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Status: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/accel_status_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Range: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/accel_range_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Resolution: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/accel_resolution_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:text="Min Delay: "
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/accel_delay_textview"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

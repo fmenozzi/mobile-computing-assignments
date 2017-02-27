@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,38 +20,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView light_view_1 = (TextView) findViewById(R.id.light_text_1);
-        TextView light_view_2 = (TextView) findViewById(R.id.light_text_2);
-        TextView accel_view_1 = (TextView) findViewById(R.id.accel_text_1);
-        TextView accel_view_2 = (TextView) findViewById(R.id.accel_text_2);
-
         SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor lightSensor = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
         Sensor accelSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         if (lightSensor != null) {
-            light_view_1.setText("Status: Present");
+            TextView lightStatusView = (TextView) findViewById(R.id.light_status_textview);
+            lightStatusView.setText("Present");
+            lightStatusView.setTextColor(ContextCompat.getColor(this, R.color.colorPresent));
 
             float rng = lightSensor.getMaximumRange();
             float res = lightSensor.getResolution();
             float dly = lightSensor.getMinDelay();
 
-            light_view_2.setText(String.valueOf(rng) + ", " + String.valueOf(res) + ", " + String.valueOf(dly));
+            ((TextView) findViewById(R.id.light_range_textview)).setText(String.valueOf(rng));
+            ((TextView) findViewById(R.id.light_resolution_textview)).setText(String.valueOf(res));
+            ((TextView) findViewById(R.id.light_delay_textview)).setText(String.valueOf(dly));
         } else {
-            light_view_1.setText("Status: Not Present");
-            light_view_2.setText("N/A");
+            TextView lightStatusView = (TextView) findViewById(R.id.light_status_textview);
+            lightStatusView.setText("Not Present");
+            lightStatusView.setTextColor(ContextCompat.getColor(this, R.color.colorAbsent));
         }
 
         if (accelSensor != null) {
-            accel_view_1.setText("Status: Present");
+            TextView accelSensorView = (TextView) findViewById(R.id.accel_status_textview);
+            accelSensorView.setText("Present");
+            accelSensorView.setTextColor(ContextCompat.getColor(this, R.color.colorPresent));
+
             float rng = accelSensor.getMaximumRange();
             float res = accelSensor.getResolution();
             float dly = accelSensor.getMinDelay();
 
-            accel_view_2.setText(String.valueOf(rng) + ", " + String.valueOf(res) + ", " + String.valueOf(dly));
+            ((TextView) findViewById(R.id.accel_range_textview)).setText(String.valueOf(rng));
+            ((TextView) findViewById(R.id.accel_resolution_textview)).setText(String.valueOf(res));
+            ((TextView) findViewById(R.id.accel_delay_textview)).setText(String.valueOf(dly));
         } else {
-            accel_view_1.setText("Status: Not Present");
-            accel_view_2.setText("N/A");
+            TextView accelSensorView = (TextView) findViewById(R.id.accel_status_textview);
+            accelSensorView.setText("Not Present");
+            accelSensorView.setTextColor(ContextCompat.getColor(this, R.color.colorAbsent));
         }
     }
 
