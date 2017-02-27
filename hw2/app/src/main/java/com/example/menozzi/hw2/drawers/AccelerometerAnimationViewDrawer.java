@@ -6,6 +6,8 @@ import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import com.example.menozzi.hw2.util.LTRB;
+
 public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDrawer {
     private float mSensorValue;
     private float mMaxSensorValue;
@@ -17,6 +19,8 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
     private static Paint sLinesPaint  = new Paint();
 
     private static Path sPhonePath = new Path();
+
+    private static final LTRB BOUNDS = new LTRB();
 
     private static final int PHONE_STROKE_WIDTH = 10;
     private static final int PHONE_CORNER_RADIUS = 20;
@@ -56,30 +60,34 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
         final int PHONE_CENTER_X = canvas.getWidth()/2;
         final int PHONE_CENTER_Y = canvas.getHeight()/2;
 
+        BOUNDS.set(PHONE_CENTER_X - (PHONE_WIDTH/2),
+                   PHONE_CENTER_Y - (PHONE_HEIGHT/2),
+                   PHONE_CENTER_X + (PHONE_WIDTH/2),
+                   PHONE_CENTER_Y + (PHONE_HEIGHT/2));
+
         drawPhone(canvas, PHONE_CENTER_X, PHONE_CENTER_Y);
         drawLines(canvas, PHONE_CENTER_X, PHONE_CENTER_Y);
     }
 
     private void drawPhone(Canvas canvas, int phoneCenterX, int phoneCenterY) {
-        float l = phoneCenterX - PHONE_WIDTH/2;
-        float r = phoneCenterX + PHONE_WIDTH/2;
-        float t = phoneCenterY - PHONE_HEIGHT/2;
-        float b = phoneCenterY + PHONE_HEIGHT/2;
-
         // Draw phone body
         sPhonePath.reset();
-        sPhonePath.moveTo(l, t);
-        sPhonePath.lineTo(r, t);
-        sPhonePath.lineTo(r, b);
-        sPhonePath.lineTo(l, b);
+        sPhonePath.moveTo(BOUNDS.l, BOUNDS.t);
+        sPhonePath.lineTo(BOUNDS.r, BOUNDS.t);
+        sPhonePath.lineTo(BOUNDS.r, BOUNDS.b);
+        sPhonePath.lineTo(BOUNDS.l, BOUNDS.b);
         sPhonePath.close();
         canvas.drawPath(sPhonePath, sPhonePaint);
 
         // Draw phone screen
-        canvas.drawRect(l+SCREEN_OFFSET_L, t+SCREEN_OFFSET_T, r-SCREEN_OFFSET_R, b-SCREEN_OFFSET_B, sScreenPaint);
+        canvas.drawRect(BOUNDS.l + SCREEN_OFFSET_L,
+                        BOUNDS.t + SCREEN_OFFSET_T,
+                        BOUNDS.r - SCREEN_OFFSET_R,
+                        BOUNDS.b - SCREEN_OFFSET_B,
+                        sScreenPaint);
 
         // Draw home button
-        canvas.drawCircle(phoneCenterX, b - SCREEN_OFFSET_B/2, HOME_BUTTON_RADIUS, sButtonPaint);
+        canvas.drawCircle(phoneCenterX, BOUNDS.b - SCREEN_OFFSET_B/2, HOME_BUTTON_RADIUS, sButtonPaint);
     }
 
     private void drawLines(Canvas canvas, int phoneCenterX, int phoneCenterY) {
