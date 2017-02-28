@@ -106,44 +106,39 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
             mSensorAnimationView.setAnimationViewDrawer(new AccelerometerAnimationViewDrawer());
         }
 
-        if (mSensor == null) {
-            String msg = "No " + sensorName.toLowerCase() + " sensor detected";
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        } else {
-            mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
+        mSensorManager.registerListener(PlotActivity.this, mSensor, SENSOR_SAMPLING_RATE);
 
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    PlotActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            float sensorValue = Float.intBitsToFloat(mCurrentSensorValue.get());
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                PlotActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        float sensorValue = Float.intBitsToFloat(mCurrentSensorValue.get());
 
-                            synchronized (mSensorData) {
-                                mSensorData.add(sensorValue);
-                                mSensorAnimationView.setValue(sensorValue);
+                        synchronized (mSensorData) {
+                            mSensorData.add(sensorValue);
+                            mSensorAnimationView.setValue(sensorValue);
 
-                                mRunningMeans.add(mSensorData.getMean());
-                                mRunningStdDevs.add(mSensorData.getStdDev());
+                            mRunningMeans.add(mSensorData.getMean());
+                            mRunningStdDevs.add(mSensorData.getStdDev());
 
-                                if (mSensorData.isFull()) {
-                                    X_AXIS.shiftLeft();
-                                }
-
-                                Float dataMax = mSensorData.getMax();
-                                if (dataMax != null && dataMax > Y_AXIS.max) {
-                                    dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
-                                    Y_AXIS.max = dataMax;
-                                }
+                            if (mSensorData.isFull()) {
+                                X_AXIS.shiftLeft();
                             }
 
-                            mPlotView.invalidate();
+                            Float dataMax = mSensorData.getMax();
+                            if (dataMax != null && dataMax > Y_AXIS.max) {
+                                dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
+                                Y_AXIS.max = dataMax;
+                            }
                         }
-                    });
-                }
-            }, 0, SENSOR_DATA_PERIOD_MS);
-        }
+
+                        mPlotView.invalidate();
+                    }
+                });
+            }
+        }, 0, SENSOR_DATA_PERIOD_MS);
     }
 
     @Override
