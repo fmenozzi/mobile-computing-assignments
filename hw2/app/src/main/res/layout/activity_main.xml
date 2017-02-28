@@ -23,7 +23,10 @@
         <Button
             android:id="@+id/light_sensor_button"
             android:text="Light"
+            android:textColor="#ffffff"
+            android:background="@drawable/sensor_button"
             android:onClick="buttonCallback"
+            android:layout_marginRight="8dp"
             android:layout_weight="4"
             android:layout_gravity="center_horizontal"
             android:layout_width="0dp"
@@ -140,7 +143,10 @@
         <Button
             android:id="@+id/accel_sensor_button"
             android:text="Accelerometer"
+            android:textColor="#ffffff"
+            android:background="@drawable/sensor_button"
             android:onClick="buttonCallback"
+            android:layout_marginRight="8dp"
             android:layout_weight="4"
             android:layout_gravity="center_horizontal"
             android:layout_width="0dp"
