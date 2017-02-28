@@ -34,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
             lightStatusView.setText("Present");
             lightStatusView.setTextColor(ContextCompat.getColor(this, R.color.colorPresent));
 
-            float rng = mLightSensor.getMaximumRange();
-            float res = mLightSensor.getResolution();
-            float dly = mLightSensor.getMinDelay();
+            String maxRangeString = String.valueOf(mLightSensor.getMaximumRange()) + " lx";
+            String resolutionString = String.valueOf(mLightSensor.getResolution()) + " lx";
+            String minDelayString = String.valueOf(mLightSensor.getMinDelay()) + " us";
 
-            ((TextView) findViewById(R.id.light_range_textview)).setText(String.valueOf(rng));
-            ((TextView) findViewById(R.id.light_resolution_textview)).setText(String.valueOf(res));
-            ((TextView) findViewById(R.id.light_delay_textview)).setText(String.valueOf(dly));
+            ((TextView) findViewById(R.id.light_range_textview)).setText(maxRangeString);
+            ((TextView) findViewById(R.id.light_resolution_textview)).setText(resolutionString);
+            ((TextView) findViewById(R.id.light_delay_textview)).setText(minDelayString);
         } else {
             TextView lightStatusView = (TextView) findViewById(R.id.light_status_textview);
             lightStatusView.setText("Not Present");
@@ -56,13 +56,15 @@ public class MainActivity extends AppCompatActivity {
             accelSensorView.setText("Present");
             accelSensorView.setTextColor(ContextCompat.getColor(this, R.color.colorPresent));
 
-            float rng = mAccelSensor.getMaximumRange();
-            float res = mAccelSensor.getResolution();
-            float dly = mAccelSensor.getMinDelay();
+            String resolutionTruncated = String.valueOf(mAccelSensor.getResolution()).substring(0, 7);
 
-            ((TextView) findViewById(R.id.accel_range_textview)).setText(String.valueOf(rng));
-            ((TextView) findViewById(R.id.accel_resolution_textview)).setText(String.valueOf(res));
-            ((TextView) findViewById(R.id.accel_delay_textview)).setText(String.valueOf(dly));
+            String maxRangeString = String.valueOf(mAccelSensor.getMaximumRange()) + " m/s^2";
+            String resolutionString = resolutionTruncated + " m/s^2";
+            String minDelayString = String.valueOf(mAccelSensor.getMinDelay()) + " us";
+
+            ((TextView) findViewById(R.id.accel_range_textview)).setText(maxRangeString);
+            ((TextView) findViewById(R.id.accel_resolution_textview)).setText(resolutionString);
+            ((TextView) findViewById(R.id.accel_delay_textview)).setText(minDelayString);
         } else {
             TextView accelSensorView = (TextView) findViewById(R.id.accel_status_textview);
             accelSensorView.setText("Not Present");
