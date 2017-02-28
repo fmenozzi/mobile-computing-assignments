@@ -16,6 +16,7 @@ import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
 
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,6 +29,8 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     FixedCircularFloatBuffer mSensorData;
     FixedCircularFloatBuffer mRunningMeans;
     FixedCircularFloatBuffer mRunningStdDevs;
+
+    Stack<Float> mPastMaxValues;
 
     SensorManager mSensorManager;
     Sensor mSensor;
@@ -88,6 +91,9 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         X_AXIS.reset(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
         Y_AXIS.reset((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
 
+        mPastMaxValues = new Stack<>();
+        mPastMaxValues.push(Y_AXIS.max);
+
         mPlotView = (PlotView) findViewById(R.id.plotview);
         mPlotView.setXAxis(X_AXIS);
         mPlotView.setYAxis(Y_AXIS);
@@ -127,9 +133,20 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                             }
 
                             Float dataMax = mSensorData.getMax();
-                            if (dataMax != null && dataMax > Y_AXIS.max) {
-                                dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
-                                Y_AXIS.max = dataMax;
+                            if (dataMax != null) {
+                                if (!mPastMaxValues.isEmpty()) {
+                                    if (dataMax > mPastMaxValues.peek()) {
+                                        dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
+
+                                        mPastMaxValues.push(dataMax);
+                                        Y_AXIS.max = dataMax;
+                                    } else if (dataMax < mPastMaxValues.peek()) {
+                                        Y_AXIS.max = mPastMaxValues.peek();
+                                        if (mPastMaxValues.size() > 1) {
+                                            mPastMaxValues.pop();
+                                        }
+                                    }
+                                }
                             }
                         }
 
