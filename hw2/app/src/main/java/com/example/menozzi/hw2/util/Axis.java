@@ -1,5 +1,9 @@
 package com.example.menozzi.hw2.util;
 
+/**
+ * Helper class for representing and manipulating x- and
+ * y-axes in a PlotView.
+ */
 public class Axis {
     public float min = 0.0f;
     public float max = 1.0f;

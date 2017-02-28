@@ -35,6 +35,13 @@ public class SensorAnimationView extends View {
         mDrawer = drawer;
     }
 
+    /**
+     * Delegates the drawing to the SensorAnimationViewDrawer, passing
+     * it the necessary sensor data.
+     *
+     * @param canvas
+     *          Canvas on which to draw
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

@@ -76,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Callback for selecting a sensor.
+     *
+     * @param v
+     *          View corresponding to the Button pressed
+     */
     void buttonCallback(View v) {
         boolean isLightButton = (v.getId() == R.id.light_sensor_button);
         if ((isLightButton && mLightSensor == null) || (!isLightButton && mAccelSensor == null)) {

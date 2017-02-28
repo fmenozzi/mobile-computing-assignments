@@ -112,23 +112,25 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
         final int NUM_ZIG_ZAGS = 6;
         final int LINE_LINE_MARGIN = 30;
 
+        // Use current sensor value to determine number of shake lines
         int numLinesOnEachSide = determineNumLines();
 
+        // Draw shake lines
         for (int i = 0; i < numLinesOnEachSide; i++) {
             int leftX = x0 - i*LINE_LINE_MARGIN;
-            drawZigZag(canvas, leftX, y0, leftX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, true);
+            drawShakeLine(canvas, leftX, y0, leftX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, true);
 
             int rightX = x1 + i*LINE_LINE_MARGIN;
-            drawZigZag(canvas, rightX, y0, rightX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, false);
+            drawShakeLine(canvas, rightX, y0, rightX, y1, NUM_ZIG_ZAGS, ZIG_ZAG_DISPLACEMENT, false);
         }
     }
 
-    private void drawZigZag(Canvas canvas,
-                            int x0, int y0,
-                            int x1, int y1,
-                            int numZigZags,
-                            int zigZagDisplacement,
-                            boolean startLeft) {
+    private void drawShakeLine(Canvas canvas,
+                               int x0, int y0,
+                               int x1, int y1,
+                               int numZigZags,
+                               int zigZagDisplacement,
+                               boolean startLeft) {
 
         int dx = startLeft ? -zigZagDisplacement : zigZagDisplacement;
         int dy = (y1-y0) / numZigZags;

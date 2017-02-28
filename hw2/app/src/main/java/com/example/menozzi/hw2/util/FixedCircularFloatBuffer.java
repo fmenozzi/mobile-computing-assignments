@@ -2,6 +2,13 @@ package com.example.menozzi.hw2.util;
 
 import android.support.annotation.NonNull;
 
+/**
+ * Data structure for representing fixed-sized circular FIFO
+ * buffers of floats. Useful for storing streaming sensor data.
+ * Makes a (weak) attempt at being thread-safe by synchronizing
+ * all actions that could potentially be happening in both the
+ * background timer task and the canvas draw calls.
+ */
 public class FixedCircularFloatBuffer {
     private float[] buf;
 

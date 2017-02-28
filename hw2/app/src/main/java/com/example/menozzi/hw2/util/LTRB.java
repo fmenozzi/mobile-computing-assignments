@@ -1,5 +1,9 @@
 package com.example.menozzi.hw2.util;
 
+/**
+ * Helper class for representing bounding boxes by
+ * their left-right-top-bottom edge coordinates.
+ */
 public class LTRB {
     public int l, t, r, b;
 
