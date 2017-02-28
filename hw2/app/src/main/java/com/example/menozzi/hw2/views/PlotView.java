@@ -92,13 +92,13 @@ public class PlotView extends View {
         int xInterval = (int)(mXAxis.getNormalizedIntervalLength() * (BOUNDS.width()+MARGIN));
         int yInterval = (int)(mYAxis.getNormalizedIntervalLength() * (BOUNDS.height()+MARGIN));
 
-        drawLegend(canvas, BOUNDS);
+        drawLegend(canvas);
         drawGrid(canvas, BOUNDS, xInterval, yInterval);
         drawAxes(canvas, BOUNDS, xInterval, yInterval);
-        drawData(canvas, BOUNDS, xInterval, yInterval);
+        drawData(canvas, BOUNDS, xInterval);
     }
 
-    public void drawLegend(Canvas canvas, LTRB bounds) {
+    public void drawLegend(Canvas canvas) {
         final int LINE_LEN = 100;
         final int LINE_PAD = 50;
 
@@ -186,7 +186,7 @@ public class PlotView extends View {
         canvas.restore();
     }
 
-    public void drawData(Canvas canvas, LTRB bounds, int xInterval, int yInterval) {
+    public void drawData(Canvas canvas, LTRB bounds, int xInterval) {
         FixedCircularFloatBuffer[] buffers = new FixedCircularFloatBuffer[] {
                 mRunningStdDevs.copy(), mRunningMeans.copy(), mSensorData.copy(),
         };

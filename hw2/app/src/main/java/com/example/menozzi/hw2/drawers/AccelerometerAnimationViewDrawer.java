@@ -11,7 +11,6 @@ import com.example.menozzi.hw2.util.LTRB;
 
 public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDrawer {
     private float mSensorValue;
-    private float mMaxSensorValue;
 
     private static final float[] THRESHOLDS = new float[]{1.5f, 5.0f, 8.0f};
 
@@ -63,7 +62,6 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
 
     public void onDraw(Canvas canvas, float sensorValue, float maxSensorValue) {
         mSensorValue = sensorValue;
-        mMaxSensorValue = maxSensorValue;
 
         final int PHONE_CENTER_X = canvas.getWidth()/2;
         final int PHONE_CENTER_Y = canvas.getHeight()/2;
@@ -73,11 +71,11 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
                    PHONE_CENTER_X + (PHONE_WIDTH/2),
                    PHONE_CENTER_Y + (PHONE_HEIGHT/2));
 
-        drawPhone(canvas, PHONE_CENTER_X, PHONE_CENTER_Y);
-        drawLines(canvas, PHONE_CENTER_X, PHONE_CENTER_Y);
+        drawPhone(canvas, PHONE_CENTER_X);
+        drawLines(canvas);
     }
 
-    private void drawPhone(Canvas canvas, int phoneCenterX, int phoneCenterY) {
+    private void drawPhone(Canvas canvas, int phoneCenterX) {
         // Draw phone body
         sPhonePath.reset();
         sPhonePath.moveTo(BOUNDS.l, BOUNDS.t);
@@ -98,7 +96,7 @@ public class AccelerometerAnimationViewDrawer implements SensorAnimationViewDraw
         canvas.drawCircle(phoneCenterX, BOUNDS.b - SCREEN_OFFSET_B/2, HOME_BUTTON_RADIUS, sButtonPaint);
     }
 
-    private void drawLines(Canvas canvas, int phoneCenterX, int phoneCenterY) {
+    private void drawLines(Canvas canvas) {
         final int LINE_PHONE_MARGIN_X = 50;
         final int LINE_PHONE_MARGIN_Y = 50;
 

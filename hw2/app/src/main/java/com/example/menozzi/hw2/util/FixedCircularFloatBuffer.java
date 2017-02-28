@@ -25,7 +25,7 @@ public class FixedCircularFloatBuffer {
         this.capacity = capacity;
     }
 
-    public synchronized void add(@NonNull float element) {
+    public synchronized void add(float element) {
         if (isFull()) {
             front = (front+1) % capacity;
         } else {
@@ -35,7 +35,6 @@ public class FixedCircularFloatBuffer {
         rear = (rear+1) % capacity;
     }
 
-    @NonNull
     public synchronized float get(int i) {
         return buf[(front + i) % capacity];
     }

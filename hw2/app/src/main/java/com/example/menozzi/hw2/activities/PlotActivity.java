@@ -7,7 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.menozzi.hw2.util.Axis;
 import com.example.menozzi.hw2.util.FixedCircularFloatBuffer;
