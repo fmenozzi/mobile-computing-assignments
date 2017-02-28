@@ -133,14 +133,16 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                             }
 
                             Float dataMax = mSensorData.getMax();
-                            if (dataMax != null) {
+                            Float meanMax = mRunningMeans.getMax();
+                            Float stdMax  = mRunningStdDevs.getMax();
+                            if (dataMax != null && meanMax != null && stdMax != null) {
+                                Float totalMax = Math.max(dataMax, Math.max(meanMax, stdMax));
                                 if (!mPastMaxValues.isEmpty()) {
-                                    if (dataMax > mPastMaxValues.peek()) {
-                                        dataMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(dataMax/Y_AXIS.resolution))));
-
-                                        mPastMaxValues.push(dataMax);
-                                        Y_AXIS.max = dataMax;
-                                    } else if (dataMax < mPastMaxValues.peek()) {
+                                    if (totalMax > mPastMaxValues.peek()) {
+                                        totalMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(totalMax/Y_AXIS.resolution))));
+                                        mPastMaxValues.push(totalMax);
+                                        Y_AXIS.max = totalMax;
+                                    } else if (totalMax < mPastMaxValues.peek()) {
                                         Y_AXIS.max = mPastMaxValues.peek();
                                         if (mPastMaxValues.size() > 1) {
                                             mPastMaxValues.pop();
