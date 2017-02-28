@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">hw2</string>
+
+    <string name="status_present">Present</string>
+    <string name="status_absent">Not Present</string>
+
+    <string name="light_button_text">Light</string>
+    <string name="accel_button_text">Accelerometer</string>
+
+    <string name="status_text">Status:</string>
+
+    <string name="max_range_text">Maximum Range:</string>
+    <string name="resolution_text">Resolution:</string>
+    <string name="min_delay_text">Minimum Delay:</string>
 </resources>
