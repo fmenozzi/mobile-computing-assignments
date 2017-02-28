@@ -97,29 +97,4 @@ public class FixedCircularFloatBuffer {
         newbuf.size = size;
         return newbuf;
     }
-
-    public synchronized String toString() {
-        if (isEmpty()) {
-            return "(len: 0, cap: " + capacity + ")";
-        }
-        StringBuilder sb = new StringBuilder(size);
-        sb.append("(len: " + size + ", cap: " + capacity + ") ");
-        for (int i = 0; i < size; i++) {
-            sb.append(get(i));
-            if (i != size-1) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        // Quick test
-        FixedCircularFloatBuffer buf = new FixedCircularFloatBuffer(4);
-        System.out.println(buf);
-        for (int i = 0; i < 20; i++) {
-            buf.add(i);
-            System.out.println(buf);
-        }
-    }
 }
