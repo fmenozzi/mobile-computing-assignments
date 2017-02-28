@@ -8,10 +8,7 @@ public class LTRB {
     public int l, t, r, b;
 
     public LTRB() {
-        this(0,0,0,0);
-    }
-    public LTRB(int l, int t, int r, int b) {
-        set(l,t,r,b);
+        set(l,r,t,b);
     }
 
     public int width() {
