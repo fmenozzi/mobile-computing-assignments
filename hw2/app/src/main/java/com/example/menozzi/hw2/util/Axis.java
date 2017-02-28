@@ -1,18 +1,18 @@
 package com.example.menozzi.hw2.util;
 
 public class Axis {
-    public double min = 0.0;
-    public double max = 1.0;
+    public float min = 0.0f;
+    public float max = 1.0f;
 
-    public double resolution = 0.2;
+    public float resolution = 0.2f;
 
     public String label;
 
-    public Axis(double min, double max, double resolution, String label) {
+    public Axis(float min, float max, float resolution, String label) {
         reset(min, max, resolution, label);
     }
 
-    public double getNormalizedIntervalLength() {
+    public float getNormalizedIntervalLength() {
         return resolution / (max-min);
     }
 
@@ -20,7 +20,7 @@ public class Axis {
         return (int)(((max-min)/resolution) - 1);
     }
 
-    public void reset(double min, double max, double resolution, String label) {
+    public void reset(float min, float max, float resolution, String label) {
         this.min = min;
         this.max = max;
 

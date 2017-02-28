@@ -201,7 +201,7 @@ public class PlotView extends View {
 
             int size = buffers[i].getSize();
             for (int j = 0; j < size; j++) {
-                float unitHeight = (bounds.b-bounds.t)/(float)(mYAxis.max - mYAxis.min);
+                float unitHeight = (bounds.b-bounds.t)/(mYAxis.max - mYAxis.min);
 
                 float cx = bounds.l + j*xInterval;
                 float cy = bounds.b - (buffers[i].get(j) * unitHeight);

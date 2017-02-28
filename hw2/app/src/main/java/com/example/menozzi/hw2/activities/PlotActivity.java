@@ -37,27 +37,27 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
     AtomicInteger mCurrentSensorValue = new AtomicInteger();
 
-    static final double LIGHT_AXIS_MIN = 0.0;
-    static final double LIGHT_AXIS_MAX = 100.0;
-    static final double LIGHT_AXIS_RESOLUTION = 20.0;
+    static final float LIGHT_AXIS_MIN = 0.0f;
+    static final float LIGHT_AXIS_MAX = 100.0f;
+    static final float LIGHT_AXIS_RESOLUTION = 20.0f;
     static final String LIGHT_AXIS_LABEL = "Luminance (lx)";
     static final Axis LIGHT_AXIS = new Axis(LIGHT_AXIS_MIN,
                                             LIGHT_AXIS_MAX,
                                             LIGHT_AXIS_RESOLUTION,
                                             LIGHT_AXIS_LABEL);
 
-    static final double ACCEL_AXIS_MIN = 0.0;
-    static final double ACCEL_AXIS_MAX = 15.0;
-    static final double ACCEL_AXIS_RESOLUTION = 5.0;
+    static final float ACCEL_AXIS_MIN = 0.0f;
+    static final float ACCEL_AXIS_MAX = 15.0f;
+    static final float ACCEL_AXIS_RESOLUTION = 5.0f;
     static final String ACCEL_AXIS_LABEL = "Acceleration (m/s^2)";
     static final Axis ACCEL_AXIS = new Axis(ACCEL_AXIS_MIN,
                                             ACCEL_AXIS_MAX,
                                             ACCEL_AXIS_RESOLUTION,
                                             ACCEL_AXIS_LABEL);
 
-    static final double X_AXIS_MIN = 0.0;
-    static final double X_AXIS_MAX = 5.0;
-    static final double X_AXIS_RESOLUTION = 1.0;
+    static final float X_AXIS_MIN = 0.0f;
+    static final float X_AXIS_MAX = 5.0f;
+    static final float X_AXIS_RESOLUTION = 1.0f;
     static final String X_AXIS_LABEL = "Elapsed Time (x100 ms)";
     static final Axis X_AXIS = new Axis(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
 
