@@ -16,7 +16,6 @@ import com.example.menozzi.hw2.views.SensorAnimationView;
 import com.example.menozzi.hw2.views.PlotView;
 import com.example.menozzi.hw2.R;
 
-import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,12 +29,12 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
     FixedCircularFloatBuffer mRunningMeans;
     FixedCircularFloatBuffer mRunningStdDevs;
 
-    Stack<Float> mPastMaxValues;
-
     SensorManager mSensorManager;
     Sensor mSensor;
 
     Timer mTimer = new Timer();
+
+    float mInitialYAxisMax;
 
     AtomicInteger mCurrentSensorValue = new AtomicInteger();
 
@@ -91,8 +90,7 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
         X_AXIS.reset(X_AXIS_MIN, X_AXIS_MAX, X_AXIS_RESOLUTION, X_AXIS_LABEL);
         Y_AXIS.reset((sensorType == Sensor.TYPE_LIGHT) ? LIGHT_AXIS : ACCEL_AXIS);
 
-        mPastMaxValues = new Stack<>();
-        mPastMaxValues.push(Y_AXIS.max);
+        mInitialYAxisMax = Y_AXIS.max;
 
         mPlotView = (PlotView) findViewById(R.id.plotview);
         mPlotView.setXAxis(X_AXIS);
@@ -123,10 +121,10 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
 
                         synchronized (mSensorData) {
                             mSensorData.add(sensorValue);
-                            mSensorAnimationView.setValue(sensorValue);
-
                             mRunningMeans.add(mSensorData.getMean());
                             mRunningStdDevs.add(mSensorData.getStdDev());
+
+                            mSensorAnimationView.setValue(sensorValue);
 
                             if (mSensorData.isFull()) {
                                 X_AXIS.shiftLeft();
@@ -137,17 +135,9 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                             Float stdMax  = mRunningStdDevs.getMax();
                             if (dataMax != null && meanMax != null && stdMax != null) {
                                 Float totalMax = Math.max(dataMax, Math.max(meanMax, stdMax));
-                                if (!mPastMaxValues.isEmpty()) {
-                                    if (totalMax > mPastMaxValues.peek()) {
-                                        totalMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(totalMax/Y_AXIS.resolution))));
-                                        mPastMaxValues.push(totalMax);
-                                        Y_AXIS.max = totalMax;
-                                    } else if (totalMax < mPastMaxValues.peek()) {
-                                        Y_AXIS.max = mPastMaxValues.peek();
-                                        if (mPastMaxValues.size() > 1) {
-                                            mPastMaxValues.pop();
-                                        }
-                                    }
+                                totalMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(totalMax/Y_AXIS.resolution))));
+                                if (totalMax >= mInitialYAxisMax) {
+                                    Y_AXIS.max = totalMax;
                                 }
                             }
                         }
