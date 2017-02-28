@@ -140,7 +140,6 @@ public class PlotActivity extends AppCompatActivity implements SensorEventListen
                                 if (!mPastMaxValues.isEmpty()) {
                                     if (totalMax > mPastMaxValues.peek()) {
                                         totalMax = (float)(Y_AXIS.resolution*(Math.ceil(Math.abs(totalMax/Y_AXIS.resolution))));
-
                                         mPastMaxValues.push(totalMax);
                                         Y_AXIS.max = totalMax;
                                     } else if (totalMax < mPastMaxValues.peek()) {
