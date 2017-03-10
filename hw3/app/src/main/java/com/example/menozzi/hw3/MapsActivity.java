@@ -40,16 +40,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Create three markers
-        LatLng brooksBldg = new LatLng(35.909562, -79.053026);
-        LatLng polkPlace = new LatLng(35.910571, -79.050381);
-        LatLng oldWell = new LatLng(35.912060, -79.051241);
+        LatLng[] points = new LatLng[] {
+                new LatLng(35.909562, -79.053026),
+                new LatLng(35.910571, -79.050381),
+                new LatLng(35.912060, -79.051241),
+        };
 
         // Add markers to map
-        mMap.addMarker(new MarkerOptions().position(brooksBldg).title("Brooks Building Entrance"));
-        mMap.addMarker(new MarkerOptions().position(polkPlace).title("Polk Place"));
-        mMap.addMarker(new MarkerOptions().position(oldWell).title("Old Well"));
+        mMap.addMarker(new MarkerOptions().position(points[0]).title("Brooks Building Entrance"));
+        mMap.addMarker(new MarkerOptions().position(points[1]).title("Polk Place"));
+        mMap.addMarker(new MarkerOptions().position(points[2]).title("Old Well"));
 
-        // Center camera over Brooks Building and zoom in
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brooksBldg, INITIAL_ZOOM_LEVEL));
+        // Calculate triangle centroid
+        double minLat = Double.POSITIVE_INFINITY, maxLat = Double.NEGATIVE_INFINITY;
+        double minLng = Double.POSITIVE_INFINITY, maxLng = Double.NEGATIVE_INFINITY;
+        for (LatLng point : points) {
+            minLat = Math.min(minLat, point.latitude);
+            maxLat = Math.max(maxLat, point.latitude);
+            minLng = Math.min(minLng, point.longitude);
+            maxLng = Math.max(maxLng, point.longitude);
+        }
+        LatLng centroid = new LatLng(minLat + (maxLat-minLat)/2, minLng + (maxLng-minLng)/2);
+
+        // Center camera over centroid and zoom in
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centroid, INITIAL_ZOOM_LEVEL));
     }
 }
