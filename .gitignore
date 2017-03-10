@@ -2,3 +2,6 @@ vcs.xml
 TODO
 hw1/.idea
 hw2/.idea
+hw3/.idea
+hw3/app/src/debug/res/values/google_maps_api.xml
+hw3/app/src/release/res/values/google_maps_api.xml
