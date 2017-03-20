@@ -1,8 +1,15 @@
 package com.example.menozzi.hw3;
 
+import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -10,9 +17,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity
+        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+                   GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
+    private GoogleApiClient mClient;
 
     private static final float INITIAL_ZOOM_LEVEL = 17.0f;
 
@@ -21,8 +31,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        // Build Google API client
+        if (mClient == null) {
+            mClient = new GoogleApiClient.Builder(this)
+                                         .addConnectionCallbacks(this)
+                                         .addOnConnectionFailedListener(this)
+                                         .addApi(LocationServices.API)
+                                         .build();
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+    }
+
+    @Override
+    protected void onStart() {
+        mClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -54,5 +85,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Center camera over centroid and zoom in
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centroid, INITIAL_ZOOM_LEVEL));
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        try {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+            if (location != null) {
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+                Log.v("CONNECTED: ", "Location: " + lat + " lat, " + lng + " lng");
+            } else {
+                Log.v("NOT CONNECTED", "Something went wrong");
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
