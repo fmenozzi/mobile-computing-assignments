@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,11 +20,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity
-        implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-                   GoogleApiClient.OnConnectionFailedListener {
+        implements OnMapReadyCallback,
+                   GoogleApiClient.ConnectionCallbacks,
+                   GoogleApiClient.OnConnectionFailedListener,
+                   LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mClient;
+    private LocationRequest mReq;
 
     private static final float INITIAL_ZOOM_LEVEL = 17.0f;
 
@@ -40,6 +45,14 @@ public class MapsActivity extends FragmentActivity
                                          .build();
         }
 
+        // Build LocationRequest object
+        if (mReq == null) {
+            mReq = new LocationRequest();
+            mReq.setInterval(10000);
+            mReq.setFastestInterval(5000);
+            mReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
@@ -47,12 +60,20 @@ public class MapsActivity extends FragmentActivity
     @Override
     protected void onStart() {
         mClient.connect();
+        if (mMap != null) {
+            try {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mClient, mReq, this);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
         super.onStart();
     }
 
     @Override
     protected void onStop() {
         mClient.disconnect();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mClient, this);
         super.onStop();
     }
 
@@ -89,6 +110,7 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Log.v("************", "CONNECTION SUCCESSFUL");
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mClient);
             if (location != null) {
@@ -105,11 +127,24 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.v("************", "CONNECTION SUSPENDED");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.v("************", "CONNECTION FAILED");
+    }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.v("************", "LOCATION CHANGED");
+        if (location != null) {
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+
+            Log.v("***LOCATION CHANGED***", "Loc: " + lat + " lat, " + lng + " lng");
+        } else {
+            Log.v("***LOCATION CHANGED***", "NULL LOCATION");
+        }
     }
 }
