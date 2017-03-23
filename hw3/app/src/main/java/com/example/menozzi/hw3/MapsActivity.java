@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.MediaPlayer;
+import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+
 public class MapsActivity extends FragmentActivity
         implements OnMapReadyCallback,
                    GoogleApiClient.ConnectionCallbacks,
@@ -53,6 +57,8 @@ public class MapsActivity extends FragmentActivity
     private static final int STROKE_COLOR  = Color.argb(128, 0, 0, 255);
     private static final int STROKE_WIDTH  = 6;
     private static final int FILL_COLOR    = Color.argb(64, 0, 0, 255);
+
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +252,21 @@ public class MapsActivity extends FragmentActivity
                         break;
                 }
                 break;
+        }
+    }
+
+    private void startPlayer(int resId) {
+        mMediaPlayer = MediaPlayer.create(this, resId);
+        mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        mMediaPlayer.start();
+    }
+
+    private void stopAndRestartPlayer() {
+        mMediaPlayer.stop();
+        try {
+            mMediaPlayer.prepare();
+        } catch (IOException e) {
+            Log.e(TAG, "FAILED TO PREPARE MEDIA PLAYER");
         }
     }
 }
