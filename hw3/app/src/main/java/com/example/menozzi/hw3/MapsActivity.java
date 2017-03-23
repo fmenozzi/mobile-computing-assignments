@@ -144,24 +144,7 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.v(TAG, "CONNECTION SUCCESSFUL");
-
-        // TODO: See if you can remove try-catch
-        try {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (location != null) {
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
-                Log.v(TAG, "Location: " + lat + " lat, " + lng + " lng");
-
-                startLocationUpdates();
-
-            } else {
-                Log.v(TAG, "Something went wrong");
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "TRY FAILED IN onConnected()");
-            e.printStackTrace();
-        }
+        startLocationUpdates();
     }
 
     @Override
