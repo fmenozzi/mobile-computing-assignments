@@ -3,6 +3,7 @@ package com.example.menozzi.hw3;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -47,6 +49,11 @@ public class MapsActivity extends FragmentActivity
     private LocationSettingsRequest mLocationSettingsRequest;
 
     private static final float INITIAL_ZOOM_LEVEL = 17.0f;
+
+    private static final int ZONE_RADIUS_M = 50;
+    private static final int STROKE_COLOR  = Color.argb(128, 0, 0, 255);
+    private static final int STROKE_WIDTH  = 6;
+    private static final int FILL_COLOR    = Color.argb(64, 0, 0, 255);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +140,16 @@ public class MapsActivity extends FragmentActivity
         mMap.addMarker(new MarkerOptions().position(points[0]).title("Brooks Building Entrance"));
         mMap.addMarker(new MarkerOptions().position(points[1]).title("Polk Place"));
         mMap.addMarker(new MarkerOptions().position(points[2]).title("Old Well"));
+
+        // Draw circles around markers to specify music zones
+        CircleOptions opts = new CircleOptions()
+                                .radius(ZONE_RADIUS_M)
+                                .strokeColor(STROKE_COLOR)
+                                .strokeWidth(STROKE_WIDTH)
+                                .fillColor(FILL_COLOR);
+        mMap.addCircle(opts.center(points[0]));
+        mMap.addCircle(opts.center(points[1]));
+        mMap.addCircle(opts.center(points[2]));
 
         // Calculate triangle centroid
         double minLat = Double.POSITIVE_INFINITY, maxLat = Double.NEGATIVE_INFINITY;
