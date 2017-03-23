@@ -114,6 +114,14 @@ public class MapsActivity extends FragmentActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Draw current location with blue dot
+        // TODO: Get rid of try-catch
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            Log.e(TAG, "TRY FAILED IN onMapReady()");
+        }
+
         // Create three markers
         LatLng[] points = new LatLng[] {
                 new LatLng(35.909562, -79.053026),
