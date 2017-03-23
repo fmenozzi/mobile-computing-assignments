@@ -43,7 +43,6 @@ public class MapsActivity extends FragmentActivity
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
-    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private LocationSettingsRequest mLocationSettingsRequest;
@@ -119,12 +118,10 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
         // Draw current location with blue dot
         // TODO: Get rid of try-catch
         try {
-            mMap.setMyLocationEnabled(true);
+            googleMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             Log.e(TAG, "TRY FAILED IN onMapReady()");
         }
@@ -137,9 +134,9 @@ public class MapsActivity extends FragmentActivity
         };
 
         // Add markers to map
-        mMap.addMarker(new MarkerOptions().position(points[0]).title("Brooks Building Entrance"));
-        mMap.addMarker(new MarkerOptions().position(points[1]).title("Polk Place"));
-        mMap.addMarker(new MarkerOptions().position(points[2]).title("Old Well"));
+        googleMap.addMarker(new MarkerOptions().position(points[0]).title("Brooks Building Entrance"));
+        googleMap.addMarker(new MarkerOptions().position(points[1]).title("Polk Place"));
+        googleMap.addMarker(new MarkerOptions().position(points[2]).title("Old Well"));
 
         // Draw circles around markers to specify music zones
         CircleOptions opts = new CircleOptions()
@@ -147,9 +144,9 @@ public class MapsActivity extends FragmentActivity
                                 .strokeColor(STROKE_COLOR)
                                 .strokeWidth(STROKE_WIDTH)
                                 .fillColor(FILL_COLOR);
-        mMap.addCircle(opts.center(points[0]));
-        mMap.addCircle(opts.center(points[1]));
-        mMap.addCircle(opts.center(points[2]));
+        googleMap.addCircle(opts.center(points[0]));
+        googleMap.addCircle(opts.center(points[1]));
+        googleMap.addCircle(opts.center(points[2]));
 
         // Calculate triangle centroid
         double minLat = Double.POSITIVE_INFINITY, maxLat = Double.NEGATIVE_INFINITY;
@@ -163,7 +160,7 @@ public class MapsActivity extends FragmentActivity
         LatLng centroid = new LatLng(minLat + (maxLat-minLat)/2, minLng + (maxLng-minLng)/2);
 
         // Center camera over centroid and zoom in
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centroid, INITIAL_ZOOM_LEVEL));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centroid, INITIAL_ZOOM_LEVEL));
     }
 
     @Override
