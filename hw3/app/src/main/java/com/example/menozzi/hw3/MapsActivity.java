@@ -1,18 +1,26 @@
 package com.example.menozzi.hw3;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +38,8 @@ public class MapsActivity extends FragmentActivity
 
     private static final long DESIRED_UPDATE_INTERVAL_MS = 2000;
     private static final long FASTEST_UPDATE_INTERVAL_MS = DESIRED_UPDATE_INTERVAL_MS/2;
+
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -142,6 +152,9 @@ public class MapsActivity extends FragmentActivity
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
                 Log.v(TAG, "Location: " + lat + " lat, " + lng + " lng");
+
+                startLocationUpdates();
+
             } else {
                 Log.v(TAG, "Something went wrong");
             }
@@ -163,14 +176,71 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v(TAG, "LOCATION CHANGED");
+        if (location != null) {
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            Log.v(TAG, "LOCATION CHANGED: " + lat + ", " + lng);
+        } else {
+            Log.v(TAG, "NULL LOCATION IN onLocationChanged()");
+        }
     }
 
     private void startLocationUpdates() {
         Log.v(TAG, "STARTING LOCATION UPDATES");
+        LocationServices.SettingsApi.checkLocationSettings(
+                mGoogleApiClient,
+                mLocationSettingsRequest
+        ).setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+                final Status status = locationSettingsResult.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i(TAG, "All location settings are satisfied.");
+                        try {
+                            LocationServices.FusedLocationApi.requestLocationUpdates(
+                                    mGoogleApiClient, mLocationRequest, MapsActivity.this);
+                        } catch (SecurityException e) {
+                            Log.e(TAG, "TRY FAILED IN startLocationUpdates()");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " +
+                                "location settings ");
+                        try {
+                            // Show dialog and check result in onActivityResult()
+                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        String errorMessage = "Fix location settings in Settings";
+                        Log.e(TAG, errorMessage);
+                        Toast.makeText(MapsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void stopLocationUpdates() {
         Log.v(TAG, "STOPPING LOCATION UPDATES");
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        Log.i(TAG, "User agreed to make required location settings changes.");
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.i(TAG, "User chose not to make required location settings changes.");
+                        break;
+                }
+                break;
+        }
     }
 }
