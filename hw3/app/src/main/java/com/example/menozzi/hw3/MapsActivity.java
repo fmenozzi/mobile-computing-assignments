@@ -26,6 +26,8 @@ public class MapsActivity extends FragmentActivity
                    GoogleApiClient.OnConnectionFailedListener,
                    LocationListener {
 
+    private static final String TAG = "************";
+
     private static final long DESIRED_UPDATE_INTERVAL_MS = 2000;
     private static final long FASTEST_UPDATE_INTERVAL_MS = DESIRED_UPDATE_INTERVAL_MS/2;
 
@@ -131,53 +133,44 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.v("************", "CONNECTION SUCCESSFUL");
-        /*
+        Log.v(TAG, "CONNECTION SUCCESSFUL");
+
+        // TODO: See if you can remove try-catch
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
-                Log.v("CONNECTED: ", "Location: " + lat + " lat, " + lng + " lng");
+                Log.v(TAG, "Location: " + lat + " lat, " + lng + " lng");
             } else {
-                Log.v("NOT CONNECTED", "Something went wrong");
+                Log.v(TAG, "Something went wrong");
             }
         } catch (SecurityException e) {
+            Log.e(TAG, "TRY FAILED IN onConnected()");
             e.printStackTrace();
         }
-        */
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.v("************", "CONNECTION SUSPENDED");
+        Log.v(TAG, "CONNECTION SUSPENDED");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.v("************", "CONNECTION FAILED");
+        Log.v(TAG, "CONNECTION FAILED");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.v("************", "LOCATION CHANGED");
-        /*
-        if (location != null) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-
-            Log.v("***LOCATION CHANGED***", "Loc: " + lat + " lat, " + lng + " lng");
-        } else {
-            Log.v("***LOCATION CHANGED***", "NULL LOCATION");
-        }
-        */
+        Log.v(TAG, "LOCATION CHANGED");
     }
 
     private void startLocationUpdates() {
-
+        Log.v(TAG, "STARTING LOCATION UPDATES");
     }
 
     private void stopLocationUpdates() {
-
+        Log.v(TAG, "STOPPING LOCATION UPDATES");
     }
 }
