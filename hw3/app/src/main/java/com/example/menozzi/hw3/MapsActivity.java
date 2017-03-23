@@ -12,6 +12,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,9 +26,13 @@ public class MapsActivity extends FragmentActivity
                    GoogleApiClient.OnConnectionFailedListener,
                    LocationListener {
 
+    private static final long DESIRED_UPDATE_INTERVAL_MS = 2000;
+    private static final long FASTEST_UPDATE_INTERVAL_MS = DESIRED_UPDATE_INTERVAL_MS/2;
+
     private GoogleMap mMap;
-    private GoogleApiClient mClient;
-    private LocationRequest mReq;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private LocationSettingsRequest mLocationSettingsRequest;
 
     private static final float INITIAL_ZOOM_LEVEL = 17.0f;
 
@@ -36,45 +41,61 @@ public class MapsActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        // Build Google API client
-        if (mClient == null) {
-            mClient = new GoogleApiClient.Builder(this)
-                                         .addConnectionCallbacks(this)
-                                         .addOnConnectionFailedListener(this)
-                                         .addApi(LocationServices.API)
-                                         .build();
-        }
-
-        // Build LocationRequest object
-        if (mReq == null) {
-            mReq = new LocationRequest();
-            mReq.setInterval(10000);
-            mReq.setFastestInterval(5000);
-            mReq.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        }
+        buildGoogleApiClient();
+        buildLocationRequest();
+        buildLocationSettingsRequest();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
+    private synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    private void buildLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(DESIRED_UPDATE_INTERVAL_MS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void buildLocationSettingsRequest() {
+        mLocationSettingsRequest = new LocationSettingsRequest.Builder()
+                                    .addLocationRequest(mLocationRequest)
+                                    .build();
+    }
+
     @Override
     protected void onStart() {
-        mClient.connect();
-        if (mMap != null) {
-            try {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mClient, mReq, this);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-        }
         super.onStart();
+        mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
-        mClient.disconnect();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mClient, this);
         super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            stopLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected()) {
+            startLocationUpdates();
+        }
     }
 
     @Override
@@ -111,8 +132,9 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.v("************", "CONNECTION SUCCESSFUL");
+        /*
         try {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
@@ -123,6 +145,7 @@ public class MapsActivity extends FragmentActivity
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+        */
     }
 
     @Override
@@ -138,6 +161,7 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onLocationChanged(Location location) {
         Log.v("************", "LOCATION CHANGED");
+        /*
         if (location != null) {
             double lat = location.getLatitude();
             double lng = location.getLongitude();
@@ -146,5 +170,14 @@ public class MapsActivity extends FragmentActivity
         } else {
             Log.v("***LOCATION CHANGED***", "NULL LOCATION");
         }
+        */
+    }
+
+    private void startLocationUpdates() {
+
+    }
+
+    private void stopLocationUpdates() {
+
     }
 }
