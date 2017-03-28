@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +36,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity
         implements OnMapReadyCallback,
@@ -56,6 +62,39 @@ public class MapsActivity extends FragmentActivity
         LatLng coords;
         Location location;
         int resId;
+    }
+
+    private class GeocoderTask extends AsyncTask<LocationInfo, Void, List<String>> {
+        private GoogleMap mGoogleMap;
+
+        GeocoderTask(GoogleMap googleMap) {
+            mGoogleMap = googleMap;
+        }
+
+        @Override
+        protected List<String> doInBackground(LocationInfo... params) {
+            try {
+                Geocoder g = new Geocoder(MapsActivity.this, Locale.getDefault());
+                List<String> addresses = new ArrayList<>(3);
+                for (LocationInfo locInfo : params) {
+                    List<Address> l = g.getFromLocation(locInfo.coords.latitude, locInfo.coords.longitude, 1);
+                    addresses.add(l.get(0).getAddressLine(0));
+                }
+                return addresses;
+            } catch (Exception e) {
+                Log.e(TAG, "Exception thrown in GeocoderTask.doInBackground()");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> addresses) {
+            for (int i = 0; i < mLocationInfos.length; i++) {
+                LocationInfo locInfo = mLocationInfos[i];
+                locInfo.label = locInfo.label.replace("...", ": ") + addresses.get(i);
+            }
+            drawMarkersAndCircles(mGoogleMap);
+        }
     }
 
     private static final String TAG = "************";
@@ -159,33 +198,17 @@ public class MapsActivity extends FragmentActivity
 
         // Create location info for each location
         mLocationInfos = new LocationInfo[3];
-        mLocationInfos[BROOKS_BLDG] = new LocationInfo("Brooks Building Entrance",
+        mLocationInfos[BROOKS_BLDG] = new LocationInfo("Brooks Building Entrance...",
                                                        new LatLng(35.909562, -79.053026),
                                                        R.raw.derezzed_glitch_mob);
-        mLocationInfos[POLK_PLACE] = new LocationInfo("Polk Place",
+        mLocationInfos[POLK_PLACE] = new LocationInfo("Polk Place...",
                                                       new LatLng(35.910571, -79.050381),
                                                       R.raw.hark_the_sound);
-        mLocationInfos[OLD_WELL] = new LocationInfo("Old Well",
+        mLocationInfos[OLD_WELL] = new LocationInfo("Old Well...",
                                                     new LatLng(35.912060, -79.051241),
                                                     R.raw.carolina_in_my_mind);
 
-        // Add markers to map
-        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[BROOKS_BLDG].coords)
-                                               .title(mLocationInfos[BROOKS_BLDG].label));
-        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[POLK_PLACE].coords)
-                                               .title(mLocationInfos[POLK_PLACE].label));
-        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[OLD_WELL].coords)
-                                               .title(mLocationInfos[OLD_WELL].label));
-
-        // Draw circles around markers to specify music zones
-        CircleOptions opts = new CircleOptions()
-                                .radius(ZONE_RADIUS_M)
-                                .strokeColor(STROKE_COLOR)
-                                .strokeWidth(STROKE_WIDTH)
-                                .fillColor(FILL_COLOR);
-        googleMap.addCircle(opts.center(mLocationInfos[BROOKS_BLDG].coords));
-        googleMap.addCircle(opts.center(mLocationInfos[POLK_PLACE].coords));
-        googleMap.addCircle(opts.center(mLocationInfos[OLD_WELL].coords));
+        drawMarkersAndCircles(googleMap);
 
         // Calculate triangle centroid
         double minLat = Double.POSITIVE_INFINITY, maxLat = Double.NEGATIVE_INFINITY;
@@ -202,6 +225,33 @@ public class MapsActivity extends FragmentActivity
 
         // Center camera over centroid and zoom in
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(centroid, INITIAL_ZOOM_LEVEL));
+
+        // Get addresses via geocoder and re-draw map when done
+        new GeocoderTask(googleMap).execute(mLocationInfos[BROOKS_BLDG],
+                                            mLocationInfos[POLK_PLACE],
+                                            mLocationInfos[OLD_WELL]);
+    }
+
+    private void drawMarkersAndCircles(GoogleMap googleMap) {
+        googleMap.clear();
+
+        // Add markers to map
+        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[BROOKS_BLDG].coords)
+                                               .title(mLocationInfos[BROOKS_BLDG].label));
+        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[POLK_PLACE].coords)
+                                               .title(mLocationInfos[POLK_PLACE].label));
+        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[OLD_WELL].coords)
+                                               .title(mLocationInfos[OLD_WELL].label));
+
+        // Draw circles around markers to specify music zones
+        CircleOptions opts = new CircleOptions()
+                .radius(ZONE_RADIUS_M)
+                .strokeColor(STROKE_COLOR)
+                .strokeWidth(STROKE_WIDTH)
+                .fillColor(FILL_COLOR);
+        googleMap.addCircle(opts.center(mLocationInfos[BROOKS_BLDG].coords));
+        googleMap.addCircle(opts.center(mLocationInfos[POLK_PLACE].coords));
+        googleMap.addCircle(opts.center(mLocationInfos[OLD_WELL].coords));
     }
 
     @Override
