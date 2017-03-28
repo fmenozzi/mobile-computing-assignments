@@ -41,15 +41,21 @@ public class MapsActivity extends FragmentActivity
                    LocationListener {
 
     private class LocationInfo {
-        public LocationInfo(String label, LatLng coords, int resId) {
+        LocationInfo(String label, LatLng coords, int resId) {
             this.label = label;
             this.coords = coords;
             this.resId = resId;
+
+            // TODO: What is this provider string?
+            this.location = new Location("bogus");
+            location.setLatitude(coords.latitude);
+            location.setLongitude(coords.longitude);
         }
 
-        public String label;
-        public LatLng coords;
-        public int resId;
+        String label;
+        LatLng coords;
+        Location location;
+        int resId;
     }
 
     private static final String TAG = "************";
@@ -71,6 +77,7 @@ public class MapsActivity extends FragmentActivity
     private static final int FILL_COLOR    = Color.argb(64, 0, 0, 255);
 
     private MediaPlayer mMediaPlayer;
+    private boolean mMusicPlaying;
 
     private LocationInfo[] mLocationInfos;
 
@@ -229,6 +236,27 @@ public class MapsActivity extends FragmentActivity
 
     private void geofence(Location currentLocation) {
         // Calculate distances to each of the three key locations
+        float[] distances = new float[3];
+        distances[BROOKS_BLDG] = currentLocation.distanceTo(mLocationInfos[BROOKS_BLDG].location);
+        distances[POLK_PLACE] = currentLocation.distanceTo(mLocationInfos[POLK_PLACE].location);
+        distances[OLD_WELL] = currentLocation.distanceTo(mLocationInfos[OLD_WELL].location);
+
+        // Determine whether to start or stop music based on "geofence"
+        if (distances[BROOKS_BLDG] <= ZONE_RADIUS_M) {
+            if (!mMusicPlaying) {
+                startPlayer(mLocationInfos[BROOKS_BLDG].resId);
+            }
+        } else if (distances[POLK_PLACE] <= ZONE_RADIUS_M) {
+            if (!mMusicPlaying) {
+                startPlayer(mLocationInfos[POLK_PLACE].resId);
+            }
+        } else if (distances[OLD_WELL] <= ZONE_RADIUS_M) {
+            if (!mMusicPlaying) {
+                startPlayer(mLocationInfos[OLD_WELL].resId);
+            }
+        } else if (mMusicPlaying) {
+            stopAndRestartPlayer();
+        }
     }
 
     private void startLocationUpdates() {
@@ -293,7 +321,10 @@ public class MapsActivity extends FragmentActivity
     private void startPlayer(int resId) {
         mMediaPlayer = MediaPlayer.create(this, resId);
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
+
+        mMusicPlaying = true;
     }
 
     private void stopAndRestartPlayer() {
@@ -303,5 +334,7 @@ public class MapsActivity extends FragmentActivity
         } catch (IOException e) {
             Log.e(TAG, "FAILED TO PREPARE MEDIA PLAYER");
         }
+
+        mMusicPlaying = false;
     }
 }
