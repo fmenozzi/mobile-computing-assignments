@@ -40,6 +40,18 @@ public class MapsActivity extends FragmentActivity
                    GoogleApiClient.OnConnectionFailedListener,
                    LocationListener {
 
+    private class LocationInfo {
+        public LocationInfo(String label, LatLng coords, int resId) {
+            this.label = label;
+            this.coords = coords;
+            this.resId = resId;
+        }
+
+        public String label;
+        public LatLng coords;
+        public int resId;
+    }
+
     private static final String TAG = "************";
 
     private static final long DESIRED_UPDATE_INTERVAL_MS = 2000;
@@ -59,6 +71,12 @@ public class MapsActivity extends FragmentActivity
     private static final int FILL_COLOR    = Color.argb(64, 0, 0, 255);
 
     private MediaPlayer mMediaPlayer;
+
+    private LocationInfo[] mLocationInfos;
+
+    private static final int BROOKS_BLDG = 0;
+    private static final int POLK_PLACE  = 1;
+    private static final int OLD_WELL    = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,17 +150,25 @@ public class MapsActivity extends FragmentActivity
             Log.e(TAG, "TRY FAILED IN onMapReady()");
         }
 
-        // Create three markers
-        LatLng[] points = new LatLng[] {
-                new LatLng(35.909562, -79.053026),
-                new LatLng(35.910571, -79.050381),
-                new LatLng(35.912060, -79.051241),
-        };
+        // Create location info for each location
+        mLocationInfos = new LocationInfo[3];
+        mLocationInfos[BROOKS_BLDG] = new LocationInfo("Brooks Building Entrance",
+                                                       new LatLng(35.909562, -79.053026),
+                                                       R.raw.derezzed_glitch_mob);
+        mLocationInfos[POLK_PLACE] = new LocationInfo("Polk Place",
+                                                      new LatLng(35.910571, -79.050381),
+                                                      R.raw.hark_the_sound);
+        mLocationInfos[OLD_WELL] = new LocationInfo("Old Well",
+                                                    new LatLng(35.912060, -79.051241),
+                                                    R.raw.carolina_in_my_mind);
 
         // Add markers to map
-        googleMap.addMarker(new MarkerOptions().position(points[0]).title("Brooks Building Entrance"));
-        googleMap.addMarker(new MarkerOptions().position(points[1]).title("Polk Place"));
-        googleMap.addMarker(new MarkerOptions().position(points[2]).title("Old Well"));
+        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[BROOKS_BLDG].coords)
+                                               .title(mLocationInfos[BROOKS_BLDG].label));
+        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[POLK_PLACE].coords)
+                                               .title(mLocationInfos[POLK_PLACE].label));
+        googleMap.addMarker(new MarkerOptions().position(mLocationInfos[OLD_WELL].coords)
+                                               .title(mLocationInfos[OLD_WELL].label));
 
         // Draw circles around markers to specify music zones
         CircleOptions opts = new CircleOptions()
@@ -150,14 +176,16 @@ public class MapsActivity extends FragmentActivity
                                 .strokeColor(STROKE_COLOR)
                                 .strokeWidth(STROKE_WIDTH)
                                 .fillColor(FILL_COLOR);
-        googleMap.addCircle(opts.center(points[0]));
-        googleMap.addCircle(opts.center(points[1]));
-        googleMap.addCircle(opts.center(points[2]));
+        googleMap.addCircle(opts.center(mLocationInfos[BROOKS_BLDG].coords));
+        googleMap.addCircle(opts.center(mLocationInfos[POLK_PLACE].coords));
+        googleMap.addCircle(opts.center(mLocationInfos[OLD_WELL].coords));
 
         // Calculate triangle centroid
         double minLat = Double.POSITIVE_INFINITY, maxLat = Double.NEGATIVE_INFINITY;
         double minLng = Double.POSITIVE_INFINITY, maxLng = Double.NEGATIVE_INFINITY;
-        for (LatLng point : points) {
+        for (LocationInfo locInfo : mLocationInfos) {
+            LatLng point = locInfo.coords;
+
             minLat = Math.min(minLat, point.latitude);
             maxLat = Math.max(maxLat, point.latitude);
             minLng = Math.min(minLng, point.longitude);
@@ -191,9 +219,16 @@ public class MapsActivity extends FragmentActivity
             double lat = location.getLatitude();
             double lng = location.getLongitude();
             Log.v(TAG, "LOCATION CHANGED: " + lat + ", " + lng);
+
+            geofence(location);
+
         } else {
             Log.v(TAG, "NULL LOCATION IN onLocationChanged()");
         }
+    }
+
+    private void geofence(Location currentLocation) {
+        // Calculate distances to each of the three key locations
     }
 
     private void startLocationUpdates() {
