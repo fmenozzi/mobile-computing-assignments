@@ -1,5 +1,6 @@
 package com.example.menozzi.hw3;
 
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -90,6 +92,8 @@ public class MapsActivity extends FragmentActivity
 
     private static final String TAG = "************";
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
     private static final long DESIRED_UPDATE_INTERVAL_MS = 2000;
     private static final long FASTEST_UPDATE_INTERVAL_MS = DESIRED_UPDATE_INTERVAL_MS/2;
 
@@ -117,11 +121,26 @@ public class MapsActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        // Request permissions
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                            PERMISSION_REQUEST_CODE);
+
         buildGoogleApiClient();
         buildLocationRequest();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                // Exit app if we don't have location permissions
+                finish();
+            }
+        }
     }
 
     private synchronized void buildGoogleApiClient() {
@@ -170,11 +189,10 @@ public class MapsActivity extends FragmentActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Draw current location with blue dot
-        // TODO: Get rid of try-catch
         try {
             googleMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
-            Log.e(TAG, "TRY FAILED IN onMapReady()");
+            Log.e(TAG, "Somehow failed to get permission before calling onMapReady()");
         }
 
         // Create location info for each location
@@ -237,31 +255,26 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.v(TAG, "CONNECTION SUCCESSFUL");
+        Log.i(TAG, "Connection successful");
         startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.v(TAG, "CONNECTION SUSPENDED");
+        Log.i(TAG, "Connection suspended");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.v(TAG, "CONNECTION FAILED");
+        Log.e(TAG, "Connection failed");
     }
 
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            Log.v(TAG, "LOCATION CHANGED: " + lat + ", " + lng);
-
             geofence(location);
-
         } else {
-            Log.v(TAG, "NULL LOCATION IN onLocationChanged()");
+            Log.v(TAG, "Null location in onLocationChanged()");
         }
     }
 
@@ -295,12 +308,11 @@ public class MapsActivity extends FragmentActivity
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, MapsActivity.this);
         } catch (SecurityException e) {
-            Log.e(TAG, "TRY FAILED IN startLocationUpdates()");
+            Log.e(TAG, "Somehow failed to get permission before calling startLocationUpdates()");
         }
     }
 
     private void stopLocationUpdates() {
-        Log.v(TAG, "STOPPING LOCATION UPDATES");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
@@ -318,7 +330,7 @@ public class MapsActivity extends FragmentActivity
         try {
             mMediaPlayer.prepare();
         } catch (IOException e) {
-            Log.e(TAG, "FAILED TO PREPARE MEDIA PLAYER");
+            Log.e(TAG, "Failed to prepare media player");
         }
 
         mMusicPlaying = false;
