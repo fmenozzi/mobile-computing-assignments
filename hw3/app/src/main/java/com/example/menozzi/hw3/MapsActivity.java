@@ -1,8 +1,5 @@
 package com.example.menozzi.hw3;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,18 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -102,11 +93,8 @@ public class MapsActivity extends FragmentActivity
     private static final long DESIRED_UPDATE_INTERVAL_MS = 2000;
     private static final long FASTEST_UPDATE_INTERVAL_MS = DESIRED_UPDATE_INTERVAL_MS/2;
 
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
-
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private LocationSettingsRequest mLocationSettingsRequest;
 
     private static final float INITIAL_ZOOM_LEVEL = 17.0f;
 
@@ -131,7 +119,6 @@ public class MapsActivity extends FragmentActivity
 
         buildGoogleApiClient();
         buildLocationRequest();
-        buildLocationSettingsRequest();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
@@ -150,12 +137,6 @@ public class MapsActivity extends FragmentActivity
         mLocationRequest.setInterval(DESIRED_UPDATE_INTERVAL_MS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    private void buildLocationSettingsRequest() {
-        mLocationSettingsRequest = new LocationSettingsRequest.Builder()
-                                    .addLocationRequest(mLocationRequest)
-                                    .build();
     }
 
     @Override
@@ -310,62 +291,17 @@ public class MapsActivity extends FragmentActivity
     }
 
     private void startLocationUpdates() {
-        Log.v(TAG, "STARTING LOCATION UPDATES");
-        LocationServices.SettingsApi.checkLocationSettings(
-                mGoogleApiClient,
-                mLocationSettingsRequest
-        ).setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-                final Status status = locationSettingsResult.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i(TAG, "All location settings are satisfied.");
-                        try {
-                            LocationServices.FusedLocationApi.requestLocationUpdates(
-                                    mGoogleApiClient, mLocationRequest, MapsActivity.this);
-                        } catch (SecurityException e) {
-                            Log.e(TAG, "TRY FAILED IN startLocationUpdates()");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " +
-                                "location settings ");
-                        try {
-                            // Show dialog and check result in onActivityResult()
-                            status.startResolutionForResult(MapsActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        String errorMessage = "Fix location settings in Settings";
-                        Log.e(TAG, errorMessage);
-                        Toast.makeText(MapsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, MapsActivity.this);
+        } catch (SecurityException e) {
+            Log.e(TAG, "TRY FAILED IN startLocationUpdates()");
+        }
     }
 
     private void stopLocationUpdates() {
         Log.v(TAG, "STOPPING LOCATION UPDATES");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        Log.i(TAG, "User agreed to make required location settings changes.");
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.i(TAG, "User chose not to make required location settings changes.");
-                        break;
-                }
-                break;
-        }
     }
 
     private void startPlayer(int resId) {
