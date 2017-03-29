@@ -200,10 +200,10 @@ public class MapsActivity extends FragmentActivity
         mLocationInfos = new LocationInfo[3];
         mLocationInfos[BROOKS_BLDG] = new LocationInfo("Brooks Building Entrance...",
                                                        new LatLng(35.909562, -79.053026),
-                                                       R.raw.derezzed_glitch_mob);
+                                                       R.raw.cake_by_the_ocean);
         mLocationInfos[POLK_PLACE] = new LocationInfo("Polk Place...",
                                                       new LatLng(35.910571, -79.050381),
-                                                      R.raw.hark_the_sound);
+                                                      R.raw.waves);
         mLocationInfos[OLD_WELL] = new LocationInfo("Old Well...",
                                                     new LatLng(35.912060, -79.051241),
                                                     R.raw.carolina_in_my_mind);
