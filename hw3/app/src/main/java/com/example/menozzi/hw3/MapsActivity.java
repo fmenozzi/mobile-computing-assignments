@@ -122,14 +122,9 @@ public class MapsActivity extends FragmentActivity
         setContentView(R.layout.activity_maps);
 
         // Request permissions
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                            PERMISSION_REQUEST_CODE);
-
-        buildGoogleApiClient();
-        buildLocationRequest();
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        ActivityCompat.requestPermissions(this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -139,6 +134,20 @@ public class MapsActivity extends FragmentActivity
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 // Exit app if we don't have location permissions
                 finish();
+            } else {
+                buildGoogleApiClient();
+                buildLocationRequest();
+
+                // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+                ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+
+                // Kick off location updates
+                if (mGoogleApiClient != null) {
+                    mGoogleApiClient.connect();
+                    if (mGoogleApiClient.isConnected()) {
+                        startLocationUpdates();
+                    }
+                }
             }
         }
     }
@@ -161,19 +170,23 @@ public class MapsActivity extends FragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
         }
     }
@@ -181,7 +194,7 @@ public class MapsActivity extends FragmentActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             startLocationUpdates();
         }
     }
